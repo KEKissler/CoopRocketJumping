@@ -125,11 +125,19 @@ public class GunController_Mouse : MonoBehaviour {
                         rocket3.color = inactive;
 
                 }
+
+                if (numRocketsLeft > 0)
+                {
+                    projectile.transform.position = transform.position;
+                    projectileController pC = projectile.GetComponent<projectileController>();
+                    pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
+                
+                }
                 if (test.collider != null)
                 {
 
                     //Debug.Log(test.collider.gameObject.name + "   " + Vector2.Distance((Vector2)(test.transform.position), (Vector2)transform.position));
-                    projectile.transform.position = new Vector3(test.point.x, test.point.y, projectile.transform.position.z);
+                    //projectile.transform.position = new Vector3(test.point.x, test.point.y, projectile.transform.position.z);
                     timeSinceLastProjectile = 0;
 
                     if (Vector2.Distance(test.point, (Vector2)transform.position) < explosionRadius && numRocketsLeft > 0)
@@ -142,6 +150,7 @@ public class GunController_Mouse : MonoBehaviour {
                     }
 
                 }
+                
                 if(!isGrounded)
                 numRocketsLeft -= 1;
             }
