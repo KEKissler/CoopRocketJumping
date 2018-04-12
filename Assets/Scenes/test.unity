@@ -732,6 +732,7 @@ GameObject:
   - component: {fileID: 430294281}
   - component: {fileID: 430294282}
   - component: {fileID: 430294285}
+  - component: {fileID: 430294286}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -838,7 +839,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 430294280}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 372c948df6048ed46801b9e963e3aaaf, type: 3}
   m_Name: 
@@ -859,6 +860,33 @@ MonoBehaviour:
   rocket3: {fileID: 454765227}
   active: {r: 1, g: 0, b: 0, a: 1}
   inactive: {r: 0.1544118, g: 0.1544118, b: 0.1544118, a: 1}
+--- !u!114 &430294286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 430294280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2045106d832760f46b3ab5d50e46fd4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectile: {fileID: 134503842}
+  projectileParent: {fileID: 1057141138}
+  jumpForce: 3
+  groundedCheckDist: 0.7
+  deadZoneThreshold: 0.2
+  walkSpeed: 6
+  airWalkSpeed: 4
+  explosionRadius: 2
+  explosionForce: 8
+  fireRate: 0.4
+  numUpdatesToIgnoreGroundedCheck: 20
+  rocket1: {fileID: 1424881474}
+  rocket2: {fileID: 1491666347}
+  rocket3: {fileID: 454765227}
+  active: {r: 1, g: 0, b: 0, a: 1}
+  inactive: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &433739659
 GameObject:
   m_ObjectHideFlags: 0
@@ -1593,8 +1621,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 992993830}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 22.635, y: 8.807, z: 1}
-  m_LocalScale: {x: 1, y: 3.377654, z: 1}
+  m_LocalPosition: {x: 22.635, y: 9.406, z: 1}
+  m_LocalScale: {x: 1, y: 2.1796744, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 13
@@ -1720,8 +1748,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1170277452}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -9.501, y: 14.4, z: 1}
-  m_LocalScale: {x: 1, y: 6.063126, z: 1}
+  m_LocalPosition: {x: -11.122, y: 14.4, z: 1}
+  m_LocalScale: {x: 0.99999994, y: 9.304724, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 15
