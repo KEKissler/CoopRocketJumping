@@ -37,12 +37,13 @@ public class projectileController : MonoBehaviour {
 
 	public void Fire(Vector2 dir)
 	{
+		this.gameObject.SetActive(true);
 		direction = dir;
 		currentSize = minSize;
 		//GetComponent<CircleCollider2D>().radius = currentSize;
 		transform.localScale = new Vector3(currentSize,currentSize,1);
 		currentForce = minForce;
-		//transform.position += new Vector3(2*speed * direction.x, 2*speed * direction.y, 0);
+		transform.position += new Vector3(speed * direction.x, speed * direction.y, 0);
 		fired = true;
 	}
 
@@ -54,7 +55,7 @@ public class projectileController : MonoBehaviour {
 		{
 			//Debug.Log(col.gameObject.name);
 			fired = false;
-			//this.enabled = false;
+			this.gameObject.SetActive(false);
 			//transform.localScale = Vector3.zero;
 		}
 	}
