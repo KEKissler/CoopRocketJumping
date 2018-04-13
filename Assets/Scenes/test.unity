@@ -902,13 +902,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectile: {fileID: 134503842}
   projectileParent: {fileID: 1057141138}
-  jumpForce: 3
+  jumpForce: 6
   groundedCheckDist: 0.7
   deadZoneThreshold: 0.2
   walkSpeed: 6
   airWalkSpeed: 4
   explosionRadius: 2
-  explosionForce: 8
+  explosionForce: 12
   fireRate: 0.4
   numUpdatesToIgnoreGroundedCheck: 20
   rocket1: {fileID: 1424881474}
