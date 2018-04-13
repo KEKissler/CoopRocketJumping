@@ -18,7 +18,7 @@ public class projectileController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		Physics2D.IgnoreLayerCollision(8, 9, true);
 	}
 	
 	// Update is called once per frame
@@ -26,10 +26,12 @@ public class projectileController : MonoBehaviour {
 		if (fired)
 		{
 			transform.position += new Vector3(speed * direction.x, speed * direction.y, 0);
-			currentForce += forceDelta;
-			currentSize += sizeDelta;
+			if (currentForce + forceDelta <= maxForce)
+				currentForce += forceDelta;
+			if (currentSize + sizeDelta <= maxSize)
+				currentSize += sizeDelta;
 			transform.localScale = new Vector3(currentSize,currentSize,1);
-			GetComponent<CircleCollider2D>().radius = currentSize;
+			//GetComponent<CircleCollider2D>().radius = currentSize;
 		}
 	}
 
@@ -37,22 +39,23 @@ public class projectileController : MonoBehaviour {
 	{
 		direction = dir;
 		currentSize = minSize;
-		GetComponent<CircleCollider2D>().radius = currentSize;
+		//GetComponent<CircleCollider2D>().radius = currentSize;
 		transform.localScale = new Vector3(currentSize,currentSize,1);
 		currentForce = minForce;
-		transform.position += new Vector3(2*speed * direction.x, 2*speed * direction.y, 0);
+		//transform.position += new Vector3(2*speed * direction.x, 2*speed * direction.y, 0);
 		fired = true;
 	}
 
 	void OnCollisionEnter2D(Collision2D col)
 	{
+		//Debug.Log(col.gameObject.name);
 		
 		if (fired && col.gameObject.tag != "Player")
 		{
-			Debug.Log(col.gameObject.name);
+			//Debug.Log(col.gameObject.name);
 			fired = false;
-			this.enabled = false;
-			transform.localScale = Vector3.zero;
+			//this.enabled = false;
+			//transform.localScale = Vector3.zero;
 		}
 	}
 }

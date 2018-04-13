@@ -299,8 +299,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a665e5d7c45b23b4ab8a265a826efb36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.1
-  minSize: 0.3
+  speed: 0.3
+  minSize: 0.2
   maxSize: 0.8
   sizeDelta: 0.005
   minForce: 2
@@ -334,7 +334,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0
+  m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -791,7 +791,7 @@ GameObject:
   - component: {fileID: 430294286}
   m_Layer: 8
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1324,7 +1324,7 @@ GameObject:
   - component: {fileID: 849632823}
   m_Layer: 8
   m_Name: Gun
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
