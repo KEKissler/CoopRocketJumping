@@ -15,8 +15,10 @@ public class GunController : MonoBehaviour {
     private int numRocketsLeft = 3;
     private bool hasFired = false;
     private Quaternion gunRotation = new Quaternion();//temp variable reset every frame that is the same as the transform rotation
+    private SpriteRenderer sp;
 	// Use this for initialization
 	void Start () {
+        sp = GetComponent<SpriteRenderer>();
         groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
         rb = GetComponent<Rigidbody2D>();
         timeSinceLastProjectile = fireRate;
@@ -140,5 +142,13 @@ public class GunController : MonoBehaviour {
         {
             hasFired = false;
         }
+    }
+
+    void LateUpdate()
+    {
+        if(rb.velocity.x <= 0)
+            sp.flipX = false;
+        else
+            sp.flipX = true;
     }
 }
