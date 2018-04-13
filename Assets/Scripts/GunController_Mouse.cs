@@ -159,4 +159,12 @@ public class GunController_Mouse : MonoBehaviour {
             hasFired = false;
         }
     }
+
+    void LateUpdate()
+    {
+        if(rb.velocity.x > 0)
+            GetComponent<SpriteRenderer>().flipX = true;
+        else
+            GetComponent<SpriteRenderer>().flipX = false;
+    }
 }
