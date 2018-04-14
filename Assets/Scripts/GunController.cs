@@ -27,7 +27,6 @@ public class GunController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //Debug.Log(Vector2.Distance(new Vector2(), new Vector2(Input.GetAxisRaw("Joystick_2_x"), Input.GetAxisRaw("Joystick_2_y")))+"\n" + new Vector2(Input.GetAxisRaw("Joystick_2_x"), Input.GetAxisRaw("Joystick_2_y")).magnitude);
         
         if (Vector2.Distance(new Vector2(), new Vector2(Input.GetAxisRaw("Joystick_2_x"), Input.GetAxisRaw("Joystick_2_y"))) >= deadZoneThreshold)//use circle and own deadzone calc to make circular deadzone
         {
@@ -37,10 +36,9 @@ public class GunController : MonoBehaviour {
         }
         //manage grounded state via raycast down. Also a timer in terms of calls to this function that is the cooldown for doing that raycast check
         //prevents player being allowed to double jump due to being deemed grounded the frame after jumping and still being close to the ground
-        if (!isGrounded && --groundedCheckReset <= 0)
-        {
-            RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), Vector2.down, groundedCheckDist, layerMask: 1);
-            if (test.collider != null) {
+        RaycastHit2D groundedCheck = Physics2D.Raycast((Vector2)(transform.position), Vector2.down, groundedCheckDist, layerMask: 1);
+        if (!isGrounded){
+            if (--groundedCheckReset <= 0 && groundedCheck.collider != null) {
                // Debug.Log(test.collider.gameObject.name);
                 isGrounded = true;
                 rocket1.color = active;
@@ -48,6 +46,10 @@ public class GunController : MonoBehaviour {
                 rocket3.color = active;
                 numRocketsLeft = 3;
             }
+        }
+        else if (groundedCheck.collider == null)
+        {
+            isGrounded = false;
         }
         //the jump itself
         if (isGrounded && Input.GetKeyDown(KeyCode.Joystick1Button0))
@@ -61,17 +63,62 @@ public class GunController : MonoBehaviour {
         if (isGrounded)
         {
             //determine if input at all
-            if(Input.GetAxis("Joystick_1_x") != 0)
+            if (Input.GetAxis("Joystick_1_x") != 0)
             {
-                //right
-                if (Input.GetAxis("Joystick_1_x") > 0)
+                //determine if input is trying to add to velocity rn or not
+                if (rb.velocity.x * Input.GetAxis("Joystick_1_x") > 0)//dot product between velocity and (Input.getAxis("Joystick_1_x"))
                 {
-                    rb.AddForce(walkSpeed * Vector2.right, ForceMode2D.Force);
+                    //in same direction as velocity, so set velocity to be walk speed if and only if the player is already moving slower than that speed
+                    if (rb.velocity.magnitude <= walkSpeed)
+                    {
+                        //right
+                        if (Input.GetAxis("Joystick_1_x") > 0)
+                        {
+                            //rb.AddForce(walkSpeed * Vector2.right, ForceMode2D.Force);
+                            rb.velocity = walkSpeed * Vector2.right;
+                        }
+                        //left
+                        else
+                        {
+                            //rb.AddForce(walkSpeed * Vector2.left, ForceMode2D.Force);
+                            rb.velocity = walkSpeed * Vector2.left;
+                        }
+                    }
                 }
-                //left
                 else
                 {
-                    rb.AddForce(walkSpeed * Vector2.left, ForceMode2D.Force);
+                    //given input is in opposite direction as velocity, so if they are fast add force opposite them to slow them down, if they are slow, just set it
+                    if (rb.velocity.magnitude <= walkSpeed)
+                    {
+                        //slow movement
+                        //right
+                        if (Input.GetAxis("Joystick_1_x") > 0)
+                        {
+                            //rb.AddForce(walkSpeed * Vector2.right, ForceMode2D.Force);
+                            rb.velocity = walkSpeed * Vector2.right;
+                        }
+                        //left
+                        else
+                        {
+                            //rb.AddForce(walkSpeed * Vector2.left, ForceMode2D.Force);
+                            rb.velocity = walkSpeed * Vector2.left;
+                        }
+                    }else
+                    {
+                        //fast movement
+                        //right
+                        if (Input.GetAxis("Joystick_1_x") > 0)
+                        {
+                            rb.AddForce(walkSpeed * Vector2.right, ForceMode2D.Force);
+                            //rb.velocity = walkSpeed * Vector2.right;
+                        }
+                        //left
+                        else
+                        {
+                            rb.AddForce(walkSpeed * Vector2.left, ForceMode2D.Force);
+                            //rb.velocity = walkSpeed * Vector2.left;
+                        }
+                    }
                 }
             }
         }
