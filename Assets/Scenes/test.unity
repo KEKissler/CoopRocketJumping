@@ -790,6 +790,8 @@ GameObject:
   - component: {fileID: 430294282}
   - component: {fileID: 430294285}
   - component: {fileID: 430294286}
+  - component: {fileID: 430294288}
+  - component: {fileID: 430294287}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -896,7 +898,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 430294280}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 372c948df6048ed46801b9e963e3aaaf, type: 3}
   m_Name: 
@@ -940,6 +942,47 @@ MonoBehaviour:
   explosionRadius: 2
   explosionForce: 8
   fireRate: 0.3
+  numUpdatesToIgnoreGroundedCheck: 20
+  rocket1: {fileID: 1424881474}
+  rocket2: {fileID: 1491666347}
+  rocket3: {fileID: 454765227}
+  active: {r: 1, g: 0, b: 0, a: 1}
+  inactive: {r: 0, g: 0, b: 0, a: 1}
+--- !u!114 &430294287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 430294280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8100c01a0b8490c478357602ee73cc7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: 0
+--- !u!114 &430294288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 430294280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ca0cb0e6479e7e4296415f25776cd81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectile: {fileID: 134503842}
+  projectileParent: {fileID: 1057141138}
+  jumpForce: 5
+  groundedCheckDist: 0.7
+  deadZoneThreshold: 0.2
+  walkSpeed: 4
+  airWalkSpeed: 6
+  airWalkSpeedThreshold: 8
+  percentVelocityLossPerSecond: 0.003
+  explosionRadius: 2
+  explosionForce: 10
+  fireRate: 0.4
   numUpdatesToIgnoreGroundedCheck: 20
   rocket1: {fileID: 1424881474}
   rocket2: {fileID: 1491666347}

@@ -9,7 +9,7 @@ public class GunInput : MonoBehaviour {
 	void Start () {
     }
 	
-    public bool inputChange()
+    public bool inputChange(float deadZoneThreshold)
     {
         if (controller)
         {

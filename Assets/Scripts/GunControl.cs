@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunController_Mouse : MonoBehaviour {
+public class GunControl : MonoBehaviour {
     public GameObject projectile, projectileParent;
     public float jumpForce, groundedCheckDist, deadZoneThreshold, walkSpeed, airWalkSpeed, airWalkSpeedThreshold, percentVelocityLossPerSecond, explosionRadius, explosionForce, fireRate;
     public int numUpdatesToIgnoreGroundedCheck = 5;
@@ -32,9 +32,9 @@ public class GunController_Mouse : MonoBehaviour {
         rb.velocity = (1 - Mathf.Clamp(percentVelocityLossPerSecond, 0, 1)) * rb.velocity;
         //Debug.Log(Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")))+"\n" + new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")).magnitude);
         
-        if (input.inputChange())//use circle and own deadzone calc to make circular deadzone
+        if (input.inputChange(deadZoneThreshold))//use circle and own deadzone calc to make circular deadzone
         {
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            transform.rotation = Quaternion.Euler(input.getRotation());
         }
         //manage grounded state via raycast down. Also a timer in terms of calls to this function that is the cooldown for doing that raycast check
         //prevents player being allowed to double jump due to being deemed grounded the frame after jumping and still being close to the ground
@@ -125,7 +125,7 @@ public class GunController_Mouse : MonoBehaviour {
                 {
 
                     //Debug.Log(test.collider.gameObject.name + "   " + Vector2.Distance((Vector2)(test.transform.position), (Vector2)transform.position));
-                    projectile.transform.position = new Vector3(test.point.x, test.point.y, projectile.transform.position.z);
+                    //projectile.transform.position = new Vector3(test.point.x, test.point.y, projectile.transform.position.z);
                     timeSinceLastProjectile = 0;
 
                     if (Vector2.Distance(test.point, (Vector2)transform.position) < explosionRadius && numRocketsLeft > 0)
