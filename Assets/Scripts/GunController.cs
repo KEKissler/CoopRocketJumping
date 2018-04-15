@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GunController : MonoBehaviour {
     public GameObject projectile, projectileParent;
-    public float jumpForce, groundedCheckDist, deadZoneThreshold, walkSpeed, airWalkSpeed, explosionRadius, explosionForce, fireRate;
+    public float jumpForce, groundedCheckDist, deadZoneThreshold, walkSpeed, airWalkSpeed, airWalkSpeedThreshold, percentVelocityLossPerSecond, explosionRadius, explosionForce, fireRate;
     public int numUpdatesToIgnoreGroundedCheck = 5;
     public SpriteRenderer rocket1, rocket2, rocket3;
     public Color active, inactive;
@@ -26,9 +26,11 @@ public class GunController : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
-        
-        if (Vector2.Distance(new Vector2(), new Vector2(Input.GetAxisRaw("Joystick_2_x"), Input.GetAxisRaw("Joystick_2_y"))) >= deadZoneThreshold)//use circle and own deadzone calc to make circular deadzone
+	void FixedUpdate () {
+        rb.velocity = (1 - Mathf.Clamp(percentVelocityLossPerSecond, 0, 1)) * rb.velocity;// * Time.deltaTime;
+
+        Debug.Log(rb.velocity);
+        if (Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y"))) >= deadZoneThreshold)//use circle and own deadzone calc to make circular deadzone
         {
             //determine the angle for the gun to be facing according to player input iff player gave strong enough input
             gunRotation.eulerAngles = new Vector3(0f, 0f, Mathf.Rad2Deg * Mathf.Atan2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")));
@@ -36,7 +38,7 @@ public class GunController : MonoBehaviour {
         }
         //manage grounded state via raycast down. Also a timer in terms of calls to this function that is the cooldown for doing that raycast check
         //prevents player being allowed to double jump due to being deemed grounded the frame after jumping and still being close to the ground
-        RaycastHit2D groundedCheck = Physics2D.Raycast((Vector2)(transform.position), Vector2.down, groundedCheckDist, layerMask: 1);
+        RaycastHit2D groundedCheck = Physics2D.Raycast((Vector2)(transform.position), Vector2.down, groundedCheckDist, layerMask: 13);
         if (!isGrounded){
             if (--groundedCheckReset <= 0 && groundedCheck.collider != null) {
                // Debug.Log(test.collider.gameObject.name);
@@ -66,7 +68,7 @@ public class GunController : MonoBehaviour {
             if (Input.GetAxis("Joystick_1_x") != 0)
             {
                 //determine if input is trying to add to velocity rn or not
-                if (rb.velocity.x * Input.GetAxis("Joystick_1_x") > 0)//dot product between velocity and (Input.getAxis("Joystick_1_x"))
+                if (rb.velocity.x * Input.GetAxis("Joystick_1_x") > 0)//dot product between velocity and (Input.GetAxis("Joystick_1_x"))
                 {
                     //in same direction as velocity, so set velocity to be walk speed if and only if the player is already moving slower than that speed
                     if (rb.velocity.magnitude <= walkSpeed)
@@ -123,20 +125,27 @@ public class GunController : MonoBehaviour {
             }
         }
         else
+        //player is not grounded
         {
             //determine if input at all
-            if (Input.GetAxisRaw("Joystick_1_x") != 0)
+            if (Input.GetAxis("Joystick_1_x") != 0)
             {
-                //right
-                if (Input.GetAxisRaw("Joystick_1_x") > 0)
+                //determine if input is trying to add to velocity rn or not
+                //if not in same direction or velocity is below threshold
+                if (rb.velocity.x * Input.GetAxis("Joystick_1_x") <= 0 || Mathf.Abs(rb.velocity.x) < airWalkSpeedThreshold)
                 {
-                    rb.AddForce(airWalkSpeed * Vector2.right, ForceMode2D.Force);
+                    //right
+                    if (Input.GetAxis("Joystick_1_x") > 0)
+                    {
+                        rb.AddForce(airWalkSpeed * Vector2.right, ForceMode2D.Force);
+                    }
+                    //left
+                    else
+                    {
+                        rb.AddForce(airWalkSpeed * Vector2.left, ForceMode2D.Force);
+                    }
                 }
-                //left
-                else
-                {
-                    rb.AddForce(airWalkSpeed * Vector2.left, ForceMode2D.Force);
-                }
+                
             }
         }
         //managing fireRate stuff
@@ -145,13 +154,13 @@ public class GunController : MonoBehaviour {
             timeSinceLastProjectile += Time.deltaTime;
         }
         //shooting projectiles
-        if (Input.GetAxis("RightTrigger") != 0)
+        if (Input.GetAxis("RightTrigger") != 0 && numRocketsLeft > 0)
         {
             if (timeSinceLastProjectile >= fireRate && !hasFired)
             {
                 hasFired = true;
                 //Debug.Log("angle: " + (this.transform.rotation.eulerAngles.z - 90) + "\nexpanded vector:" + new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
-                RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))), distance: Mathf.Infinity, layerMask: 1);
+                RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))), distance: Mathf.Infinity, layerMask: 13);
                 if (!isGrounded)
                 {
                     

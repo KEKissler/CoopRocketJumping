@@ -27,7 +27,7 @@ public class GunController_Mouse : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //Debug.Log(Vector2.Distance(new Vector2(), new Vector2(Input.GetAxisRaw("Joystick_2_x"), Input.GetAxisRaw("Joystick_2_y")))+"\n" + new Vector2(Input.GetAxisRaw("Joystick_2_x"), Input.GetAxisRaw("Joystick_2_y")).magnitude);
+        //Debug.Log(Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")))+"\n" + new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")).magnitude);
         
         if (Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"))) >= deadZoneThreshold)//use circle and own deadzone calc to make circular deadzone
         {
@@ -87,10 +87,10 @@ public class GunController_Mouse : MonoBehaviour {
         else
         {
             //determine if input at all
-            if (Input.GetAxisRaw("Horizontal") != 0)
+            if (Input.GetAxis("Horizontal") != 0)
             {
                 //right
-                if (Input.GetAxisRaw("Horizontal") > 0)
+                if (Input.GetAxis("Horizontal") > 0)
                 {
                     rb.AddForce(airWalkSpeed * Vector2.right, ForceMode2D.Force);
                 }
