@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class GunController_Mouse : MonoBehaviour {
+public class GunController_Mouse : NetworkBehaviour
+{
     public GameObject projectile, projectileParent;
     public float jumpForce, groundedCheckDist, deadZoneThreshold, walkSpeed, airWalkSpeed, explosionRadius, explosionForce, fireRate;
     public int numUpdatesToIgnoreGroundedCheck = 5;
@@ -23,10 +25,17 @@ public class GunController_Mouse : MonoBehaviour {
         rocket1.color = active;
         rocket2.color = active;
         rocket3.color = active;
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().toFollow = this.gameObject;
+        //projectileParent = Instantiate(projectileParent);
     }
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (!isLocalPlayer)
+        {
+            return;
+        }
         //Debug.Log(Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")))+"\n" + new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")).magnitude);
         
         if (Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"))) >= deadZoneThreshold)//use circle and own deadzone calc to make circular deadzone
@@ -128,13 +137,17 @@ public class GunController_Mouse : MonoBehaviour {
 
                 if (numRocketsLeft > 0)
                 {
-                    projectile.transform.position = transform.position;
-                    projectileController pC = projectile.GetComponent<projectileController>();
+                    
+                  //  projectile.transform.position = transform.position;
+                    GameObject rocket = Instantiate(projectile);
+                    rocket.transform.position = this.transform.position;
+
+                    projectileController pC = rocket.GetComponent<projectileController>();
+                        
                     pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
                 
                 }
-                if (test.collider != null)
-                {
+                if (test.collider != null)                {
 
                     //Debug.Log(test.collider.gameObject.name + "   " + Vector2.Distance((Vector2)(test.transform.position), (Vector2)transform.position));
                     //projectile.transform.position = new Vector3(test.point.x, test.point.y, projectile.transform.position.z);

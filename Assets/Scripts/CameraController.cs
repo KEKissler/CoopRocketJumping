@@ -8,13 +8,31 @@ public class CameraController : MonoBehaviour {
 
     private Vector3 offset;
     private int count;
+
+    private bool Player_found = false;
 	// Use this for initialization
 	void Start () {
-        offset = transform.position - toFollow.transform.position;
+
+        toFollow = GameObject.FindGameObjectWithTag("Player");
+        
 	}
 
     // Update is called once per frame
     void Update() {
-        transform.position = toFollow.transform.position + offset;
+
+        if (!Player_found)
+        {
+            if (GameObject.FindGameObjectWithTag("Player") != null)
+            {
+                offset = transform.position - toFollow.transform.position;
+                
+                Player_found = true;
+            }
+        }
+        else
+        {
+            transform.position = toFollow.transform.position + offset;
+
+        }
     }
 }

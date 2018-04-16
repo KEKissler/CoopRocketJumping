@@ -55,7 +55,7 @@ public class projectileController : MonoBehaviour {
 		{
 			//Debug.Log(col.gameObject.name);
 			fired = false;
-			this.gameObject.SetActive(false);
+            Destroy(this.gameObject);
 			//transform.localScale = Vector3.zero;
 		}
 	}
