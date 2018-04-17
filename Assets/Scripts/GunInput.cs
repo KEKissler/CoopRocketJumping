@@ -17,7 +17,7 @@ public class GunInput : MonoBehaviour {
         }
         else
         {
-            return Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"))) >= deadZoneThreshold;
+            return Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"))) > 0;
         }
     }
 

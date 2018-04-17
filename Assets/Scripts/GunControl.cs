@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class GunControl : MonoBehaviour {
+public class GunControl : NetworkBehaviour {
     public GameObject projectile, projectileParent;
     public float jumpForce, groundedCheckDist, deadZoneThreshold, walkSpeed, airWalkSpeed, airWalkSpeedThreshold, percentVelocityLossPerSecond, explosionRadius, explosionForce, fireRate;
     public int numUpdatesToIgnoreGroundedCheck = 5;
@@ -24,11 +25,18 @@ public class GunControl : MonoBehaviour {
         rocket2.color = active;
         rocket3.color = active;
         input = GetComponent<GunInput>();
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().toFollow = this.gameObject;
         
     }
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
         rb.velocity = (1 - Mathf.Clamp(percentVelocityLossPerSecond, 0, 1)) * rb.velocity;
         //Debug.Log(Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")))+"\n" + new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")).magnitude);
         
@@ -103,10 +111,13 @@ public class GunControl : MonoBehaviour {
         {
             if (timeSinceLastProjectile >= fireRate && !hasFired)
             {
-                projectile.transform.position = transform.position;
-                projectileController pC = projectile.GetComponent<projectileController>();
-                pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
+                GameObject rocket = Instantiate(projectile);
+                rocket.transform.position = this.transform.position;
 
+                projectileController pC = rocket.GetComponent<projectileController>();
+                    
+                pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
+            
                 hasFired = true;
                 //Debug.Log("angle: " + (this.transform.rotation.eulerAngles.z - 90) + "\nexpanded vector:" + new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
                 RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))), distance: Mathf.Infinity, layerMask: 13);
