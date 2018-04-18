@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class GunControl : NetworkBehaviour {
-    public GameObject projectile, projectileParent;
+    public GameObject projectile, projectileParent, p1_indicator;
     public float jumpForce, groundedCheckDist, deadZoneThreshold, walkSpeed, airWalkSpeed, airWalkSpeedThreshold, percentVelocityLossPerSecond, explosionRadius, explosionForce, fireRate;
     public int numUpdatesToIgnoreGroundedCheck = 5;
     public SpriteRenderer rocket1, rocket2, rocket3;
@@ -16,8 +16,15 @@ public class GunControl : NetworkBehaviour {
     private int numRocketsLeft = 3;
     private bool hasFired = false;
     private GunInput input;
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+
+    public override void OnStartLocalPlayer() // the player client is controlling will have a tiny arrow on top
+    {
+
+        GameObject p1 = Instantiate(p1_indicator, this.transform);
+        p1.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 1, this.transform.position.z);
+    }
+    void Start () {
         groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
         rb = transform.GetComponent<Rigidbody2D>();
         timeSinceLastProjectile = fireRate;
@@ -42,19 +49,16 @@ public class GunControl : NetworkBehaviour {
         
         if (input.inputChange(deadZoneThreshold))//use circle and own deadzone calc to make circular deadzone
         {
-            transform.GetChild(0).rotation = Quaternion.Euler(input.getRotation());
+            CmdRotate_gun();
+            
         }
         //manage grounded state via raycast down. Also a timer in terms of calls to this function that is the cooldown for doing that raycast check
         //prevents player being allowed to double jump due to being deemed grounded the frame after jumping and still being close to the ground
         RaycastHit2D groundedCheck = Physics2D.Raycast((Vector2)(transform.position), Vector2.down, groundedCheckDist, layerMask: 13);
         if (!isGrounded){
             if (--groundedCheckReset <= 0 && groundedCheck.collider != null) {
-               // Debug.Log(test.collider.gameObject.name);
-                isGrounded = true;
-                rocket1.color = active;
-                rocket2.color = active;
-                rocket3.color = active;
-                numRocketsLeft = 3;
+                // Debug.Log(test.collider.gameObject.name);
+                Cmdrocket_allactive();
             }
         }
         else if (groundedCheck.collider == null)
@@ -168,50 +172,75 @@ public class GunControl : NetworkBehaviour {
         {
             if (timeSinceLastProjectile >= fireRate && !hasFired)
             {
-                GameObject rocket = Instantiate(projectile);
-                rocket.transform.position = this.transform.position;
-
-                projectileController pC = rocket.GetComponent<projectileController>();
-                    
-                pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))));
-            
-                hasFired = true;
-                //Debug.Log("angle: " + (this.transform.rotation.eulerAngles.z - 90) + "\nexpanded vector:" + new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
-                RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))), distance: Mathf.Infinity, layerMask: 13);
-                if (!isGrounded)
-                {
-                    
-                    if (numRocketsLeft == 1)
-                        rocket1.color = inactive;
-                    if (numRocketsLeft == 2)
-                        rocket2.color = inactive;
-                    if (numRocketsLeft == 3)
-                        rocket3.color = inactive;
-
-                }
-                if (test.collider != null)
-                {
-
-                    //Debug.Log(test.collider.gameObject.name + "   " + Vector2.Distance((Vector2)(test.transform.position), (Vector2)transform.position));
-                    //projectile.transform.position = new Vector3(test.point.x, test.point.y, projectile.transform.position.z);
-                    timeSinceLastProjectile = 0;
-
-                    if (Vector2.Distance(test.point, (Vector2)transform.position) < explosionRadius && numRocketsLeft > 0)
-                    {
-                        if (isGrounded)
-                            numRocketsLeft += 1;
-                        isGrounded = false;
-                        groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
-                        rb.AddForce(-explosionForce * (test.point - (Vector2)this.transform.position).normalized, ForceMode2D.Impulse);
-                    }
-
-                }
-                if(!isGrounded)
-                numRocketsLeft -= 1;
+                CmdFire();
             }
         }else
         {
             hasFired = false;
         }
+    }
+
+
+    [Command]
+    void CmdRotate_gun()
+    {
+        transform.GetChild(0).rotation = Quaternion.Euler(input.getRotation());
+    }
+
+
+    [Command]
+    void Cmdrocket_allactive()
+    {
+        isGrounded = true;
+        rocket1.color = active;
+        rocket2.color = active;
+        rocket3.color = active;
+        numRocketsLeft = 3;
+    }
+
+    [Command]
+    void CmdFire()
+    {
+        GameObject rocket = Instantiate(projectile);
+        rocket.transform.position = this.transform.position;
+
+        projectileController pC = rocket.GetComponent<projectileController>();
+
+        pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))));
+
+        hasFired = true;
+        NetworkServer.Spawn(rocket);
+        //Debug.Log("angle: " + (this.transform.rotation.eulerAngles.z - 90) + "\nexpanded vector:" + new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
+        RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))), distance: Mathf.Infinity, layerMask: 13);
+        if (!isGrounded)
+        {
+
+            if (numRocketsLeft == 1)
+                rocket1.color = inactive;
+            if (numRocketsLeft == 2)
+                rocket2.color = inactive;
+            if (numRocketsLeft == 3)
+                rocket3.color = inactive;
+
+        }
+        if (test.collider != null)
+        {
+
+            //Debug.Log(test.collider.gameObject.name + "   " + Vector2.Distance((Vector2)(test.transform.position), (Vector2)transform.position));
+            //projectile.transform.position = new Vector3(test.point.x, test.point.y, projectile.transform.position.z);
+            timeSinceLastProjectile = 0;
+
+            if (Vector2.Distance(test.point, (Vector2)transform.position) < explosionRadius && numRocketsLeft > 0)
+            {
+                if (isGrounded)
+                    numRocketsLeft += 1;
+                isGrounded = false;
+                groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
+                rb.AddForce(-explosionForce * (test.point - (Vector2)this.transform.position).normalized, ForceMode2D.Impulse);
+            }
+
+        }
+        if (!isGrounded)
+            numRocketsLeft -= 1;
     }
 }

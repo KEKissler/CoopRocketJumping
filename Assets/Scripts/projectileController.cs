@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class projectileController : MonoBehaviour {
+
+public class projectileController : NetworkBehaviour
+{
 
 	private Vector2 direction;
 	public float speed;

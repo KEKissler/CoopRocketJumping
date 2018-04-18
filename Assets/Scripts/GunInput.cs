@@ -1,14 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class GunInput : MonoBehaviour {
     //public GameObject character;
     public bool controller = false;
-	// Use this for initialization
-	void Start () {
-    }
-	
+
+    
     public bool inputChange(float deadZoneThreshold)
     {
         if (controller)
@@ -20,7 +19,7 @@ public class GunInput : MonoBehaviour {
             return Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"))) > 0;
         }
     }
-
+  
     public Vector3 getRotation()
     {
         if (controller)
@@ -49,6 +48,7 @@ public class GunInput : MonoBehaviour {
             return Input.GetKeyDown(KeyCode.Space);
     }
 
+  
     public float getXAxis()
     {
         if (controller)
@@ -56,7 +56,7 @@ public class GunInput : MonoBehaviour {
         else
             return Input.GetAxis("Horizontal");
     }
-
+   
     public bool getFire()
     {
         if (controller)

@@ -85,10 +85,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4240887494559644}
   - component: {fileID: 114984576047499508}
-  - component: {fileID: 114224553699206388}
   - component: {fileID: 114117668874956794}
   - component: {fileID: 114064002139201058}
   - component: {fileID: 50039993408761660}
+  - component: {fileID: 114224553699206388}
+  - component: {fileID: 114823101276336016}
   m_Layer: 0
   m_Name: PlayerWrapper
   m_TagString: Untagged
@@ -241,7 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8100c01a0b8490c478357602ee73cc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: 1
+  controller: 0
 --- !u!114 &114117668874956794
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -255,6 +256,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectile: {fileID: 1412639747217426, guid: e605516d19088fb4496e06401e9ddf31, type: 2}
   projectileParent: {fileID: 1114664835940258, guid: ffb4df754f402e74282a469703ba1e9c,
+    type: 2}
+  p1_indicator: {fileID: 1752946842591914, guid: 94941e19d9b3ea4498b5bd2daf9f5171,
     type: 2}
   jumpForce: 5
   groundedCheckDist: 0.7
@@ -283,8 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.11111111
+  m_TransformSyncMode: 2
+  m_SendInterval: 0.0625
   m_SyncRotationAxis: 3
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
@@ -293,6 +296,25 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
+--- !u!114 &114823101276336016
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1589402915363746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1267208747, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 4415326646770676}
+  m_ChildIndex: 0
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_MovementThreshold: 0.001
+  m_InterpolateRotation: 0.5
+  m_InterpolateMovement: 0.5
 --- !u!114 &114984576047499508
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -324,7 +346,7 @@ MonoBehaviour:
     i14: 81
     i15: 71
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
+  m_LocalPlayerAuthority: 0
 --- !u!212 &212194090734522116
 SpriteRenderer:
   m_ObjectHideFlags: 1
