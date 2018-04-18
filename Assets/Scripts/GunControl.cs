@@ -57,6 +57,10 @@ public class GunControl : NetworkBehaviour {
                 numRocketsLeft = 3;
             }
         }
+        else if (groundedCheck.collider == null)
+        {
+            isGrounded = false;
+        }
         //the jump itself
         if (isGrounded && input.getJump())
         {
