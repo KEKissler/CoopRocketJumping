@@ -19,13 +19,13 @@ public class GunControl : NetworkBehaviour {
 	// Use this for initialization
 	void Start () {
         groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
-        rb = GetComponent<Rigidbody2D>();
+        rb = transform.GetComponent<Rigidbody2D>();
         timeSinceLastProjectile = fireRate;
         rocket1.color = active;
         rocket2.color = active;
         rocket3.color = active;
         input = GetComponent<GunInput>();
-        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().toFollow = this.gameObject;
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().toFollow = this.transform.gameObject;
         
     }
 	
@@ -42,7 +42,7 @@ public class GunControl : NetworkBehaviour {
         
         if (input.inputChange(deadZoneThreshold))//use circle and own deadzone calc to make circular deadzone
         {
-            transform.rotation = Quaternion.Euler(input.getRotation());
+            transform.GetChild(0).rotation = Quaternion.Euler(input.getRotation());
         }
         //manage grounded state via raycast down. Also a timer in terms of calls to this function that is the cooldown for doing that raycast check
         //prevents player being allowed to double jump due to being deemed grounded the frame after jumping and still being close to the ground
@@ -70,39 +70,92 @@ public class GunControl : NetworkBehaviour {
         if (isGrounded)
         {
             //determine if input at all
-            if(xAxis != 0)
+            if (xAxis != 0)
             {
-                //right
-                if (xAxis > 0)
+                //determine if input is trying to add to velocity rn or not
+                if (rb.velocity.x * xAxis > 0)//dot product between velocity and (xAxis)
                 {
-                    rb.AddForce(walkSpeed * Vector2.right, ForceMode2D.Force);
+                    //in same direction as velocity, so set velocity to be walk speed if and only if the player is already moving slower than that speed
+                    if (rb.velocity.magnitude <= walkSpeed)
+                    {
+                        //right
+                        if (xAxis > 0)
+                        {
+                            //rb.AddForce(walkSpeed * Vector2.right, ForceMode2D.Force);
+                            rb.velocity = walkSpeed * Vector2.right;
+                        }
+                        //left
+                        else
+                        {
+                            //rb.AddForce(walkSpeed * Vector2.left, ForceMode2D.Force);
+                            rb.velocity = walkSpeed * Vector2.left;
+                        }
+                    }
                 }
-                //left
                 else
                 {
-                    rb.AddForce(walkSpeed * Vector2.left, ForceMode2D.Force);
+                    //given input is in opposite direction as velocity, so if they are fast add force opposite them to slow them down, if they are slow, just set it
+                    if (rb.velocity.magnitude <= walkSpeed)
+                    {
+                        //slow movement
+                        //right
+                        if (xAxis > 0)
+                        {
+                            //rb.AddForce(walkSpeed * Vector2.right, ForceMode2D.Force);
+                            rb.velocity = walkSpeed * Vector2.right;
+                        }
+                        //left
+                        else
+                        {
+                            //rb.AddForce(walkSpeed * Vector2.left, ForceMode2D.Force);
+                            rb.velocity = walkSpeed * Vector2.left;
+                        }
+                    }
+                    else
+                    {
+                        //fast movement
+                        //right
+                        if (xAxis > 0)
+                        {
+                            rb.AddForce(walkSpeed * Vector2.right, ForceMode2D.Force);
+                            //rb.velocity = walkSpeed * Vector2.right;
+                        }
+                        //left
+                        else
+                        {
+                            rb.AddForce(walkSpeed * Vector2.left, ForceMode2D.Force);
+                            //rb.velocity = walkSpeed * Vector2.left;
+                        }
+                    }
                 }
             }
         }
         else
+        //player is not grounded
         {
             //determine if input at all
             if (xAxis != 0)
             {
-                //right
-                if (xAxis > 0)
+                //determine if input is trying to add to velocity rn or not
+                //if not in same direction or velocity is below threshold
+                if (rb.velocity.x * xAxis <= 0 || Mathf.Abs(rb.velocity.x) < airWalkSpeedThreshold)
                 {
-                    rb.AddForce(airWalkSpeed * Vector2.right, ForceMode2D.Force);
+                    //right
+                    if (xAxis > 0)
+                    {
+                        rb.AddForce(airWalkSpeed * Vector2.right, ForceMode2D.Force);
+                    }
+                    //left
+                    else
+                    {
+                        rb.AddForce(airWalkSpeed * Vector2.left, ForceMode2D.Force);
+                    }
                 }
-                //left
-                else
-                {
-                    rb.AddForce(airWalkSpeed * Vector2.left, ForceMode2D.Force);
-                }
+
             }
         }
         //managing fireRate stuff
-        if(timeSinceLastProjectile < fireRate)
+        if (timeSinceLastProjectile < fireRate)
         {
             timeSinceLastProjectile += Time.deltaTime;
         }
@@ -116,11 +169,11 @@ public class GunControl : NetworkBehaviour {
 
                 projectileController pC = rocket.GetComponent<projectileController>();
                     
-                pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
+                pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))));
             
                 hasFired = true;
                 //Debug.Log("angle: " + (this.transform.rotation.eulerAngles.z - 90) + "\nexpanded vector:" + new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
-                RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))), distance: Mathf.Infinity, layerMask: 13);
+                RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))), distance: Mathf.Infinity, layerMask: 13);
                 if (!isGrounded)
                 {
                     

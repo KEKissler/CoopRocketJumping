@@ -7,6 +7,12 @@ public class TeleporterBox : MonoBehaviour {
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        other.transform.position = ObjectLocationToTPTo.transform.position;
+        if (other.transform.parent != null)
+        {
+            other.transform.parent.position = ObjectLocationToTPTo.transform.position;
+        }else
+        {
+            other.transform.position = ObjectLocationToTPTo.transform.position;
+        }
     }
 }
