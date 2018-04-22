@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8100c01a0b8490c478357602ee73cc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: 0
+  controller: 1
 --- !u!114 &114117668874956794
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -254,7 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ca0cb0e6479e7e4296415f25776cd81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 1412639747217426, guid: e605516d19088fb4496e06401e9ddf31, type: 2}
+  projectile: {fileID: 1131615438556342, guid: e605516d19088fb4496e06401e9ddf31, type: 2}
   projectileParent: {fileID: 1114664835940258, guid: ffb4df754f402e74282a469703ba1e9c,
     type: 2}
   p1_indicator: {fileID: 1752946842591914, guid: 94941e19d9b3ea4498b5bd2daf9f5171,
