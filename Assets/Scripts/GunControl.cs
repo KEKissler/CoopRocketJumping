@@ -7,7 +7,7 @@ public class GunControl : NetworkBehaviour {
     public GameObject projectile, p1_indicator;
     public float jumpForce, groundedCheckDist, deadZoneThreshold, walkSpeed, airWalkSpeed, airWalkSpeedThreshold, percentVelocityLossPerSecond, fireRate;
     public int numUpdatesToIgnoreGroundedCheck = 5;
-    public SpriteRenderer rocket1, rocket2, rocket3;
+    public SpriteRenderer rocket1, rocket2, rocket3; 
     public Color active, inactive;
     private float timeSinceLastProjectile;
     private int groundedCheckReset;
@@ -20,10 +20,11 @@ public class GunControl : NetworkBehaviour {
 
     public override void OnStartLocalPlayer() // the player client is controlling will have a tiny arrow on top
     {
-
         GameObject p1 = Instantiate(p1_indicator, this.transform);
         p1.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 1, this.transform.position.z);
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().assignObjToFollow(transform);
     }
+
     void Start () {
         groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
         rb = transform.GetComponent<Rigidbody2D>();
@@ -32,8 +33,8 @@ public class GunControl : NetworkBehaviour {
         rocket2.color = active;
         rocket3.color = active;
         input = GetComponent<GunInput>();
-        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().toFollow = this.transform.gameObject;
-        
+
+        Physics2D.IgnoreLayerCollision(8, 8);//objects on layer of player cannot collide with one another, meaning players cannot bump into one another
     }
 	
 	// Update is called once per frame
@@ -49,7 +50,7 @@ public class GunControl : NetworkBehaviour {
         
         if (input.inputChange(deadZoneThreshold))//use circle and own deadzone calc to make circular deadzone
         {
-            CmdRotate_gun();
+            Rotate_gun();
             
         }
         //manage grounded state via raycast down. Also a timer in terms of calls to this function that is the cooldown for doing that raycast check
@@ -172,6 +173,7 @@ public class GunControl : NetworkBehaviour {
         {
             if (timeSinceLastProjectile >= fireRate && !hasFired)
             {
+                timeSinceLastProjectile = 0;
                 CmdFire();
             }
         }else
@@ -181,8 +183,8 @@ public class GunControl : NetworkBehaviour {
     }
 
 
-    [Command]
-    void CmdRotate_gun()
+
+    void Rotate_gun()
     {
         transform.GetChild(0).rotation = Quaternion.Euler(input.getRotation());
     }
@@ -206,11 +208,12 @@ public class GunControl : NetworkBehaviour {
 
         projectileController pC = rocket.GetComponent<projectileController>();
         pC.playerWhoFiredThis = transform;
+        Debug.Log(transform.gameObject.name + " fired a rocket");
 
         pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))));
 
         hasFired = true;
-        timeSinceLastProjectile = 0;
+        
 
         NetworkServer.Spawn(rocket);
         //Debug.Log("angle: " + (this.transform.rotation.eulerAngles.z - 90) + "\nexpanded vector:" + new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
@@ -241,8 +244,8 @@ public class GunControl : NetworkBehaviour {
 
 
     }
-
-    public void applyRocketForceToSelf(float explForce, Vector2 explosionCenter)
+    [ClientRpc]
+    public void RpcApplyRocketForceToSelf(float explForce, Vector2 explosionCenter)
     {
         isGrounded = false;
         groundedCheckReset = numUpdatesToIgnoreGroundedCheck;

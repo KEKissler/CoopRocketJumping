@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class explosionController : MonoBehaviour {
+public class explosionController : NetworkBehaviour
+{
+    [SyncVar]
     public float fadeTime;
     private float totalTimeAlive = 0;
     private SpriteRenderer sr;

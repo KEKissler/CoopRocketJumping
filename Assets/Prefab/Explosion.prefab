@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 4331081297488662}
   - component: {fileID: 212787722022747278}
   - component: {fileID: 114431660157570008}
+  - component: {fileID: 114006531145153852}
+  - component: {fileID: 114333146497164634}
   m_Layer: 0
   m_Name: Explosion
   m_TagString: Untagged
@@ -36,11 +38,64 @@ Transform:
   m_GameObject: {fileID: 1154285485190530}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 5}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114006531145153852
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154285485190530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 92
+    i1: 168
+    i2: 153
+    i3: 140
+    i4: 73
+    i5: 235
+    i6: 226
+    i7: 100
+    i8: 169
+    i9: 143
+    i10: 127
+    i11: 212
+    i12: 194
+    i13: 195
+    i14: 207
+    i15: 31
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
+--- !u!114 &114333146497164634
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154285485190530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0
+  m_SyncRotationAxis: 0
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 0
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 0
 --- !u!114 &114431660157570008
 MonoBehaviour:
   m_ObjectHideFlags: 1

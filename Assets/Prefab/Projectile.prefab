@@ -91,8 +91,8 @@ MonoBehaviour:
   m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 2
-  m_SendInterval: 0.11111111
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.033333335
   m_SyncRotationAxis: 3
   m_RotationSyncCompression: 0
   m_SyncSpin: 0
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a665e5d7c45b23b4ab8a265a826efb36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.3
+  speed: 15
   minColliderSize: 0.3
   maxColliderSize: 1
   minExplosionSize: 2

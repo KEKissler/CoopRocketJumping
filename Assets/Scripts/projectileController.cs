@@ -20,6 +20,7 @@ public class projectileController : NetworkBehaviour
 	public float forceDelta;
 	private float currentForce;
 	private float currentColliderSize;
+    [SyncVar]
     private float currentExplosionSize;
 	private bool fired = false;
     public GameObject explosion;
@@ -35,7 +36,7 @@ public class projectileController : NetworkBehaviour
 	void Update () {
 		if (fired)
 		{
-			transform.position += new Vector3(speed * direction.x, speed * direction.y, 0);
+			//transform.position += new Vector3(speed * direction.x, speed * direction.y, 0);
 			if (currentForce + forceDelta <= maxForce)
 				currentForce += forceDelta;
 			if (currentColliderSize + colliderSizeDelta <= maxColliderSize)
@@ -50,13 +51,14 @@ public class projectileController : NetworkBehaviour
 	public void Fire(Vector2 dir)
 	{
 		this.gameObject.SetActive(true);
-		direction = dir;
+		direction = dir.normalized;
+        transform.GetComponent<Rigidbody2D>().velocity = speed * direction;
 		currentColliderSize = minColliderSize;
         currentExplosionSize = minExplosionSize;
         currentForce = minForce;
 
         transform.localScale = new Vector3(currentColliderSize, currentColliderSize, 1);
-        transform.position += new Vector3(speed * direction.x, speed * direction.y, 0);
+        //transform.position += new Vector3(speed * direction.x, speed * direction.y, 0);
 		fired = true;
 	}
 
@@ -70,7 +72,7 @@ public class projectileController : NetworkBehaviour
             if (fired && col.gameObject.tag == "Player")
             {
                 Debug.Log("Trying to push " + col.gameObject.name + "\nwith a rocket force of " + currentForce);
-                col.gameObject.transform.GetComponent<GunControl>().applyRocketForceToSelf(currentForce, (Vector2)(this.transform.position));
+                col.gameObject.transform.GetComponent<GunControl>().RpcApplyRocketForceToSelf(currentForce, (Vector2)(this.transform.position));
             }
 
             if (fired && col.gameObject.tag != "Player")
@@ -80,14 +82,14 @@ public class projectileController : NetworkBehaviour
                 Vector2 centerPointOfCollision = new Vector2();
                 int i = col.GetContacts(contact);
                 int totalNumPointsContacted = i;
-                Debug.Log(i + " point(s) of contact found.");
+                //Debug.Log(i + " point(s) of contact found.");
                 for (; i > 0; --i)
                 {
-                    Debug.Log("Contact #" + i + " = " + contact[i - 1].point);
+                    //Debug.Log("Contact #" + i + " = " + contact[i - 1].point);
                     centerPointOfCollision += contact[i - 1].point;
                 }
                 centerPointOfCollision /= totalNumPointsContacted;
-                Debug.Log("Average Point of all contacts = " + centerPointOfCollision);
+                //Debug.Log("Average Point of all contacts = " + centerPointOfCollision);
                 i = 0;
                 Collider2D[] hitColliders = new Collider2D[16];
                 Collider2D coll2d;
@@ -96,21 +98,29 @@ public class projectileController : NetworkBehaviour
                 while (i < hitColliders.Length && hitColliders[i])
                 {
                     coll2d = hitColliders[i];
-                    Debug.Log(hitColliders[i].gameObject.name);
+                    //Debug.Log(hitColliders[i].gameObject.name);
                     if(coll2d.tag == "Player")
                     {
-                        coll2d.gameObject.transform.parent.GetComponent<GunControl>().applyRocketForceToSelf(currentForce, centerPointOfCollision);
+                        coll2d.gameObject.transform.parent.GetComponent<GunControl>().RpcApplyRocketForceToSelf(currentForce, centerPointOfCollision);
                     }
                     ++i;
                 }
-                Debug.Log("Num gameObjects within " + currentExplosionSize + " units of centerPoint = " + (i - 1));//i-1 b/c the projectile counts itself
-                //creating an explosion object at the point of collision of the size of the explosion
-                GameObject temp = Instantiate(explosion, transform.position, Quaternion.identity);
-                temp.transform.localScale = new Vector3(2*currentExplosionSize, 2*currentExplosionSize, 1);
-                
+                //Debug.Log("Num gameObjects within " + currentExplosionSize + " units of centerPoint = " + (i - 1));//i-1 b/c the projectile counts itself
+
+                if(totalNumPointsContacted > 0)
+                transform.position = new Vector3(centerPointOfCollision.x, centerPointOfCollision.y, transform.position.z);
+                CmdSpawnExplosion();
                 fired = false;
                 Destroy(this.gameObject);
             }
         }        
 	}
+    [Command]
+    void CmdSpawnExplosion()
+    {
+        //creating an explosion object at the point of collision of the size of the explosion
+        GameObject temp = Instantiate(explosion, transform.position, Quaternion.identity);
+        temp.transform.localScale = new Vector3(2 * currentExplosionSize, 2 * currentExplosionSize, 1);
+        NetworkServer.Spawn(temp);
+    }
 }
