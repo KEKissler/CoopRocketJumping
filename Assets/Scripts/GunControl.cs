@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class GunControl : NetworkBehaviour {
-    public GameObject projectile, projectileParent, p1_indicator;
-    public float jumpForce, groundedCheckDist, deadZoneThreshold, walkSpeed, airWalkSpeed, airWalkSpeedThreshold, percentVelocityLossPerSecond, explosionRadius, explosionForce, fireRate;
+    public GameObject projectile, p1_indicator;
+    public float jumpForce, groundedCheckDist, deadZoneThreshold, walkSpeed, airWalkSpeed, airWalkSpeedThreshold, percentVelocityLossPerSecond, fireRate;
     public int numUpdatesToIgnoreGroundedCheck = 5;
     public SpriteRenderer rocket1, rocket2, rocket3;
     public Color active, inactive;
