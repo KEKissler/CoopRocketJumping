@@ -2038,7 +2038,7 @@ MonoBehaviour:
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 1
   m_OfflineScene: 
-  m_OnlineScene: 
+  m_OnlineScene: NetworkTest_Tina
   m_SpawnPrefabs:
   - {fileID: 1131615438556342, guid: e605516d19088fb4496e06401e9ddf31, type: 2}
   m_CustomConfig: 0
@@ -2083,14 +2083,14 @@ MonoBehaviour:
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
     m_MaxNetSimulatorTimeout: 12000
-  m_Channels: 
+  m_Channels: 0500000000000000
   m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1
   m_PacketLossPercentage: 0
   m_MaxBufferedPackets: 16
   m_AllowFragmentation: 1
-  m_MatchHost: mm.unet.unity3d.com
+  m_MatchHost: us1-mm.unet.unity3d.com
   m_MatchPort: 443
   matchName: default
   matchSize: 4

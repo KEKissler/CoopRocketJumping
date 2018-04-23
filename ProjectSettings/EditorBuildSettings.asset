@@ -6,5 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Lobby.unity
+    guid: 2a42bbdbbd34e924ab6aa59b8487a608
+  - enabled: 1
     path: Assets/Scenes/NetworkTest_Tina.unity
     guid: 21d04b371a297ad48b75dbfe143d5233
