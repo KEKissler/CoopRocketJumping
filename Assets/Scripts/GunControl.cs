@@ -46,6 +46,7 @@ public class GunControl : NetworkBehaviour {
         }
 
         rb.velocity = (1 - Mathf.Clamp(percentVelocityLossPerSecond, 0, 1)) * rb.velocity;
+        Debug.Log(Mathf.Round(10*rb.velocity.magnitude)/10);
         //Debug.Log(Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")))+"\n" + new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")).magnitude);
         
         if (input.inputChange(deadZoneThreshold))//use circle and own deadzone calc to make circular deadzone
@@ -203,7 +204,7 @@ public class GunControl : NetworkBehaviour {
     [Command]
     void CmdFire()
     {
-        Debug.Log("transform.gameObject.name = " + transform.gameObject.name + " netId = " + netId + "\n this is the server? " + isLocalPlayer);
+        //Debug.Log("transform.gameObject.name = " + transform.gameObject.name + " netId = " + netId + "\n this is the server? " + isLocalPlayer);
         GameObject rocket = Instantiate(projectile);
         //make rocket ignore collision with the player who fired it
         Physics2D.IgnoreCollision(rocket.GetComponent<CircleCollider2D>(), transform.GetChild(0).GetComponent<CircleCollider2D>(), true);
@@ -212,7 +213,7 @@ public class GunControl : NetworkBehaviour {
         projectileController pC = rocket.GetComponent<projectileController>();
         pC.playerWhoFiredThis = transform;
         pC.netIdOfWhoFiredThis = netId;
-        Debug.Log(transform.gameObject.name + " netId = " + netId + " fired a rocket");
+        //Debug.Log(transform.gameObject.name + " netId = " + netId + " fired a rocket");
 
         pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (transform.GetChild(0).rotation.eulerAngles.z - 90))));
 

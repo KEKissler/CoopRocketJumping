@@ -259,7 +259,7 @@ MonoBehaviour:
     type: 2}
   jumpForce: 5
   groundedCheckDist: 0.7
-  deadZoneThreshold: 0.2
+  deadZoneThreshold: 0.3
   walkSpeed: 4
   airWalkSpeed: 6
   airWalkSpeedThreshold: 8
