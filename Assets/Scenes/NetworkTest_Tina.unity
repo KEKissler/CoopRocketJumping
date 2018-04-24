@@ -2041,6 +2041,7 @@ MonoBehaviour:
   m_OnlineScene: NetworkTest_Tina
   m_SpawnPrefabs:
   - {fileID: 1131615438556342, guid: e605516d19088fb4496e06401e9ddf31, type: 2}
+  - {fileID: 1154285485190530, guid: 5ca8998c49ebe264a98f7fd4c2c3cf1f, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:

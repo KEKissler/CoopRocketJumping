@@ -26,10 +26,12 @@ public class projectileController : NetworkBehaviour
     public GameObject explosion;
     [HideInInspector]
     public Transform playerWhoFiredThis;
+    [HideInInspector]
+    public NetworkInstanceId netIdOfWhoFiredThis;
 
 	// Use this for initialization
 	void Start () {
-		Physics2D.IgnoreLayerCollision(8, 9, true);
+		//Physics2D.IgnoreLayerCollision(8, 9, true);
 	}
 	
 	// Update is called once per frame
@@ -64,18 +66,26 @@ public class projectileController : NetworkBehaviour
 
 	void OnCollisionEnter2D(Collision2D col)
 	{
-        Debug.Log("\n\n");
-        Debug.Log("hit "  + col.gameObject.name);
-        Debug.Log("\n\n");
-        if (col.otherCollider.transform != playerWhoFiredThis)
-        {
-            if (fired && col.gameObject.tag == "Player")
-            {
-                Debug.Log("Trying to push " + col.gameObject.name + "\nwith a rocket force of " + currentForce);
-                col.gameObject.transform.GetComponent<GunControl>().RpcApplyRocketForceToSelf(currentForce, (Vector2)(this.transform.position));
-            }
+        //Debug.Log("\n\n");
+        Debug.Log("?");
+        //Debug.Log("\n\n");
 
-            if (fired && col.gameObject.tag != "Player")
+        if (fired && col.gameObject.tag == "Player")
+        {
+            if (col.gameObject.GetComponent<GunControl>().netId != netIdOfWhoFiredThis)
+            {
+                Debug.Log("Trying to push " + col.gameObject.name + "netId = " + col.gameObject.GetComponent<GunControl>().netId + "\nwith a rocket force of " + currentForce);
+                col.gameObject.transform.GetComponent<GunControl>().RpcApplyRocketForceToSelf(currentForce, (Vector2)(this.transform.position), (Vector2)(this.transform.position - col.gameObject.transform.position));
+                CmdSpawnExplosion();
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                Debug.Log("Ignored Collision between a rocket fired by netId: " + netIdOfWhoFiredThis + " and player netId: " + col.gameObject.transform.GetComponent<GunControl>().netId);
+            }
+        }
+
+        if (fired && col.gameObject.tag != "Player")
             {
 
                 ContactPoint2D[] contact = new ContactPoint2D[16];// could hold many points of contact so average all to one center point
@@ -101,7 +111,7 @@ public class projectileController : NetworkBehaviour
                     //Debug.Log(hitColliders[i].gameObject.name);
                     if(coll2d.tag == "Player")
                     {
-                        coll2d.gameObject.transform.parent.GetComponent<GunControl>().RpcApplyRocketForceToSelf(currentForce, centerPointOfCollision);
+                    coll2d.gameObject.transform.parent.GetComponent<GunControl>().RpcApplyRocketForceToSelf(currentForce, centerPointOfCollision, centerPointOfCollision - (Vector2)coll2d.gameObject.transform.position);
                     }
                     ++i;
                 }
@@ -112,8 +122,7 @@ public class projectileController : NetworkBehaviour
                 CmdSpawnExplosion();
                 fired = false;
                 Destroy(this.gameObject);
-            }
-        }        
+            } 
 	}
     [Command]
     void CmdSpawnExplosion()

@@ -203,14 +203,16 @@ public class GunControl : NetworkBehaviour {
     [Command]
     void CmdFire()
     {
+        Debug.Log("transform.gameObject.name = " + transform.gameObject.name + " netId = " + netId + "\n this is the server? " + isLocalPlayer);
         GameObject rocket = Instantiate(projectile);
-        rocket.transform.position = this.transform.position;
+        rocket.transform.position = transform.position;
 
         projectileController pC = rocket.GetComponent<projectileController>();
         pC.playerWhoFiredThis = transform;
-        Debug.Log(transform.gameObject.name + " fired a rocket");
+        pC.netIdOfWhoFiredThis = netId;
+        Debug.Log(transform.gameObject.name + " netId = " + netId + " fired a rocket");
 
-        pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))));
+        pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (transform.GetChild(0).rotation.eulerAngles.z - 90))));
 
         hasFired = true;
         
@@ -245,10 +247,19 @@ public class GunControl : NetworkBehaviour {
 
     }
     [ClientRpc]
-    public void RpcApplyRocketForceToSelf(float explForce, Vector2 explosionCenter)
+    public void RpcApplyRocketForceToSelf(float explForce, Vector2 explosionCenter, Vector2 direction)
     {
         isGrounded = false;
         groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
-        rb.AddForce(-explForce * (explosionCenter - (Vector2)this.transform.position).normalized, ForceMode2D.Impulse);
+        if (direction == new Vector2())
+        {
+            //note that the true direction is not explosionCenter-this.transform.position, the transform position changes by the time this gets called on the client. [ClientRpc] just does that
+            rb.AddForce(-explForce * (explosionCenter - (Vector2)this.transform.position).normalized, ForceMode2D.Impulse);
+
+        }else
+        {
+            rb.AddForce(-explForce * (direction).normalized, ForceMode2D.Impulse);
+        }
+        
     }
 }
