@@ -205,6 +205,8 @@ public class GunControl : NetworkBehaviour {
     {
         Debug.Log("transform.gameObject.name = " + transform.gameObject.name + " netId = " + netId + "\n this is the server? " + isLocalPlayer);
         GameObject rocket = Instantiate(projectile);
+        //make rocket ignore collision with the player who fired it
+        Physics2D.IgnoreCollision(rocket.GetComponent<CircleCollider2D>(), transform.GetChild(0).GetComponent<CircleCollider2D>(), true);
         rocket.transform.position = transform.position;
 
         projectileController pC = rocket.GetComponent<projectileController>();

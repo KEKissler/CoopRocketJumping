@@ -64,10 +64,10 @@ public class projectileController : NetworkBehaviour
 		fired = true;
 	}
 
-	void OnCollisionEnter2D(Collision2D col)
+    void OnCollisionEnter2D(Collision2D col)
 	{
         //Debug.Log("\n\n");
-        Debug.Log("?");
+        //Debug.Log("?");
         //Debug.Log("\n\n");
 
         if (fired && col.gameObject.tag == "Player")
