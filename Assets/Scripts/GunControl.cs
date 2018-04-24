@@ -175,7 +175,7 @@ public class GunControl : NetworkBehaviour {
             if (timeSinceLastProjectile >= fireRate && !hasFired)
             {
                 timeSinceLastProjectile = 0;
-                CmdFire();
+                CmdFire(this.transform.position,transform.GetChild(0).GetComponent<Transform>().rotation);
             }
         }else
         {
@@ -202,25 +202,27 @@ public class GunControl : NetworkBehaviour {
     }
 
     [Command]
-    void CmdFire()
+    void CmdFire(Vector3 firePos, Quaternion eulerAngles)
     {
         //Debug.Log("transform.gameObject.name = " + transform.gameObject.name + " netId = " + netId + "\n this is the server? " + isLocalPlayer);
-        GameObject rocket = Instantiate(projectile);
+        GameObject rocket = Instantiate(projectile, firePos,eulerAngles);
+        NetworkServer.Spawn(rocket);
         //make rocket ignore collision with the player who fired it
         Physics2D.IgnoreCollision(rocket.GetComponent<CircleCollider2D>(), transform.GetChild(0).GetComponent<CircleCollider2D>(), true);
-        rocket.transform.position = transform.position;
+   //     rocket.transform.position = firePos;
+//        rocket.transform.rotation = eulerAngles;
 
         projectileController pC = rocket.GetComponent<projectileController>();
         pC.playerWhoFiredThis = transform;
         pC.netIdOfWhoFiredThis = netId;
         //Debug.Log(transform.gameObject.name + " netId = " + netId + " fired a rocket");
 
-        pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (transform.GetChild(0).rotation.eulerAngles.z - 90))));
+        pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (eulerAngles.z - 90))));
 
         hasFired = true;
         
 
-        NetworkServer.Spawn(rocket);
+        
         //Debug.Log("angle: " + (this.transform.rotation.eulerAngles.z - 90) + "\nexpanded vector:" + new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
         //RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))), distance: Mathf.Infinity, layerMask: 13);
         if (!isGrounded)
