@@ -207,7 +207,7 @@ public class GunControl : NetworkBehaviour {
     void CmdFire(Vector3 firePos, Vector3 eulerAngles)
     {
         
-        //Debug.Log("transform.gameObject.name = " + transform.gameObject.name + " netId = " + netId + "\n this is the server? " + isLocalPlayer);
+      //  Debug.Log("transform.gameObject.name = " + transform.gameObject.name + " netId = " + netId + "\n this is the server? " + isLocalPlayer);
         GameObject rocket = Instantiate(projectile, firePos, Quaternion.identity);
         NetworkServer.Spawn(rocket);
         //make rocket ignore collision with the player who fired it
