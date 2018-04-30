@@ -115,7 +115,7 @@ public class projectileController : NetworkBehaviour
                     }
                     else if(coll2d.tag == "PhysObj")
                     {
-                    coll2d.gameObject.GetComponent<Rigidbody2D>().AddForce(-currentForce * (centerPointOfCollision - (Vector2)coll2d.gameObject.transform.position).normalized + new Vector2(0,10), ForceMode2D.Impulse);
+                    coll2d.gameObject.GetComponent<Rigidbody2D>().AddForce(-currentForce * (centerPointOfCollision - (Vector2)coll2d.gameObject.transform.position).normalized + new Vector2(0,5), ForceMode2D.Impulse);
                     }
                     ++i;
                 }
