@@ -18,6 +18,9 @@ public class GunControl : NetworkBehaviour {
     private GunInput input;
     // Use this for initialization
 
+    private Vector2 movement;
+    RaycastHit2D groundedCheck;
+
     private static bool created = false;
 
 
@@ -44,156 +47,110 @@ public class GunControl : NetworkBehaviour {
 
         Physics2D.IgnoreLayerCollision(8, 8);//objects on layer of player cannot collide with one another, meaning players cannot bump into one another
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
 
         if (!isLocalPlayer)
         {
             return;
         }
 
-        rb.velocity = (1 - Mathf.Clamp(percentVelocityLossPerSecond, 0, 1)) * rb.velocity;
-//        Debug.Log(Mathf.Round(10*rb.velocity.magnitude)/10);
+        //rb.velocity = (1 - Mathf.Clamp(percentVelocityLossPerSecond, 0, 1)) * rb.velocity;
+        //        Debug.Log(Mathf.Round(10*rb.velocity.magnitude)/10);
         //Debug.Log(Vector2.Distance(new Vector2(), new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")))+"\n" + new Vector2(Input.GetAxis("Joystick_2_x"), Input.GetAxis("Joystick_2_y")).magnitude);
-        
+
         if (input.inputChange(deadZoneThreshold))//use circle and own deadzone calc to make circular deadzone
         {
             Rotate_gun();
-            
+
         }
         //manage grounded state via raycast down. Also a timer in terms of calls to this function that is the cooldown for doing that raycast check
         //prevents player being allowed to double jump due to being deemed grounded the frame after jumping and still being close to the ground
-        RaycastHit2D groundedCheck = Physics2D.Raycast((Vector2)(transform.position), Vector2.down, groundedCheckDist, layerMask: 13);
-        if (!isGrounded){
-            if (--groundedCheckReset <= 0 && groundedCheck.collider != null) {
-                // Debug.Log(test.collider.gameObject.name);
-                Cmdrocket_allactive();
-            }
+        groundedCheck = Physics2D.Raycast((Vector2)(transform.position), Vector2.down, groundedCheckDist, layerMask: 13);
+
+
+        if (groundedCheck.collider != null)
+        {
+            isGrounded = true;
+            Cmdrocket_allactive();
         }
-        else if (groundedCheck.collider == null)
+        else
         {
             isGrounded = false;
         }
+
         //the jump itself
         if (isGrounded && input.getJump())
-        {
-            CmdJump();
-
-        }
-
-        float xAxis = input.getXAxis();
-        Debug.Log(xAxis);
-        //left right movement both for ground and in air
-        if (isGrounded)
-        {
-            //determine if input at all
-            if (xAxis != 0)
             {
-                //determine if input is trying to add to velocity rn or not
-                if (rb.velocity.x * xAxis > 0)//dot product between velocity and (xAxis)
+                isGrounded = false;
+                groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
+                rb.AddForce(jumpForce * Vector2.up, ForceMode2D.Impulse);
+
+
+            }
+
+            float xAxis = input.getXAxis();
+
+            //left right movement both for ground and in air
+            if (isGrounded)
+            {
+
+                movement.x = xAxis;
+            }
+            else
+            //player is not grounded
+            {
+                //determine if input at all
+                if (xAxis != 0)
                 {
-                    //in same direction as velocity, so set velocity to be walk speed if and only if the player is already moving slower than that speed
-                    if (rb.velocity.magnitude <= walkSpeed)
+                    //determine if input is trying to add to velocity rn or not
+                    //if not in same direction or velocity is below threshold
+                    if (rb.velocity.x * xAxis <= 0 || Mathf.Abs(rb.velocity.x) < airWalkSpeedThreshold)
                     {
                         //right
                         if (xAxis > 0)
                         {
-                            //rb.AddForce(walkSpeed * Vector2.right, ForceMode2D.Force);
-                            rb.velocity = walkSpeed * Vector2.right;
+                            rb.AddForce(airWalkSpeed * Vector2.right, ForceMode2D.Force);
                         }
                         //left
                         else
                         {
-                            //rb.AddForce(walkSpeed * Vector2.left, ForceMode2D.Force);
-                            rb.velocity = walkSpeed * Vector2.left;
+                            rb.AddForce(airWalkSpeed * Vector2.left, ForceMode2D.Force);
                         }
                     }
-                }
-                else
-                {
-                    //given input is in opposite direction as velocity, so if they are fast add force opposite them to slow them down, if they are slow, just set it
-                    if (rb.velocity.magnitude <= walkSpeed)
-                    {
-                        //slow movement
-                        //right
-                        if (xAxis > 0)
-                        {
-                            //rb.AddForce(walkSpeed * Vector2.right, ForceMode2D.Force);
-                            rb.velocity = walkSpeed * Vector2.right;
-                        }
-                        //left
-                        else
-                        {
-                            //rb.AddForce(walkSpeed * Vector2.left, ForceMode2D.Force);
-                            rb.velocity = walkSpeed * Vector2.left;
-                        }
-                    }
-                    else
-                    {
-                        //fast movement
-                        //right
-                        if (xAxis > 0)
-                        {
-                            rb.AddForce(walkSpeed * Vector2.right, ForceMode2D.Force);
-                            //rb.velocity = walkSpeed * Vector2.right;
-                        }
-                        //left
-                        else
-                        {
-                            rb.AddForce(walkSpeed * Vector2.left, ForceMode2D.Force);
-                            //rb.velocity = walkSpeed * Vector2.left;
-                        }
-                    }
-                }
-            }
-        }
-        else
-        //player is not grounded
-        {
-            //determine if input at all
-            if (xAxis != 0)
-            {
-                //determine if input is trying to add to velocity rn or not
-                //if not in same direction or velocity is below threshold
-                if (rb.velocity.x * xAxis <= 0 || Mathf.Abs(rb.velocity.x) < airWalkSpeedThreshold)
-                {
-                    //right
-                    if (xAxis > 0)
-                    {
-                        rb.AddForce(airWalkSpeed * Vector2.right, ForceMode2D.Force);
-                    }
-                    //left
-                    else
-                    {
-                        rb.AddForce(airWalkSpeed * Vector2.left, ForceMode2D.Force);
-                    }
-                }
 
+                }
             }
-        }
-        //managing fireRate stuff
-        if (timeSinceLastProjectile < fireRate)
-        {
-            timeSinceLastProjectile += Time.deltaTime;
-        }
-        //shooting projectiles
-        if (input.getFire() && numRocketsLeft > 0)
-        {
-            if (timeSinceLastProjectile >= fireRate && !hasFired)
+            //managing fireRate stuff
+            if (timeSinceLastProjectile < fireRate)
             {
-                timeSinceLastProjectile = 0;
-                CmdFire(this.transform.position, transform.GetChild(0).rotation.eulerAngles);
-      
-   
+                timeSinceLastProjectile += Time.deltaTime;
             }
-        }else
-        {
-            hasFired = false;
+            //shooting projectiles
+            if (input.getFire() && numRocketsLeft > 0)
+            {
+                if (timeSinceLastProjectile >= fireRate && !hasFired)
+                {
+                    timeSinceLastProjectile = 0;
+                    CmdFire(this.transform.position, transform.GetChild(0).rotation.eulerAngles);
+
+
+
+                }
+            }
+            else
+            {
+                hasFired = false;
+            }
         }
+    
+
+    private void FixedUpdate()
+    {
+        transform.Translate(new Vector3(walkSpeed * movement.x * Time.deltaTime, movement.y, 0));
     }
-
-
 
     void Rotate_gun()
     {
@@ -201,24 +158,17 @@ public class GunControl : NetworkBehaviour {
     }
 
 
-    [Command]
-    void CmdJump()
-    {
-        isGrounded = false;
-        groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
-        rb.AddForce(jumpForce * Vector2.up, ForceMode2D.Impulse);
-
-    }
 
     [Command]
     void Cmdrocket_allactive()
     {
-        isGrounded = true;
+       
         rocket1.color = active;
         rocket2.color = active;
         rocket3.color = active;
         numRocketsLeft = 3;
     }
+    
 
     [Command]
     void CmdFire(Vector3 firePos, Vector3 eulerAngles)
@@ -243,11 +193,8 @@ public class GunControl : NetworkBehaviour {
      //below is the old formula
       //  pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (transform.GetChild(0).rotation.eulerAngles.z - 90))));
         hasFired = true;
-        
 
-        
-        //Debug.Log("angle: " + (this.transform.rotation.eulerAngles.z - 90) + "\nexpanded vector:" + new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
-        //RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))), distance: Mathf.Infinity, layerMask: 13);
+
         if (!isGrounded)
         {
 
@@ -259,8 +206,12 @@ public class GunControl : NetworkBehaviour {
                 rocket3.color = inactive;
             numRocketsLeft -= 1;
         }
+        //Debug.Log("angle: " + (this.transform.rotation.eulerAngles.z - 90) + "\nexpanded vector:" + new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
+        //RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))), distance: Mathf.Infinity, layerMask: 13);
+
+
         //if (!isGrounded)
-          //  numRocketsLeft -= 1;
+        //  numRocketsLeft -= 1;
         //if (test.collider != null)
 
         //Debug.Log(test.collider.gameObject.name + "   " + Vector2.Distance((Vector2)(test.transform.position), (Vector2)transform.position));
