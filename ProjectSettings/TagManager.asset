@@ -3,8 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - PhysObj
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -14,11 +13,11 @@ TagManager:
   - UI
   - 
   - 
-  - Player
-  - Projectile
-  - Player2
-  - Projectile2
-  - TpBox
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

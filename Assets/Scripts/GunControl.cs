@@ -18,11 +18,19 @@ public class GunControl : NetworkBehaviour {
     private GunInput input;
     // Use this for initialization
 
+    private static bool created = false;
+
+
     public override void OnStartLocalPlayer() // the player client is controlling will have a tiny arrow on top
     {
         GameObject p1 = Instantiate(p1_indicator, this.transform);
         p1.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 1, this.transform.position.z);
         GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().assignObjToFollow(transform);
+
+        //janks
+        //GameObject Manager = GameObject.FindGameObjectWithTag("Network_Manager");
+        //transform.SetParent(Manager.transform);
+       
     }
 
     void Start () {
@@ -70,12 +78,12 @@ public class GunControl : NetworkBehaviour {
         //the jump itself
         if (isGrounded && input.getJump())
         {
-            isGrounded = false;
-            groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
-            rb.AddForce(jumpForce * Vector2.up, ForceMode2D.Impulse);
+            CmdJump();
+
         }
 
         float xAxis = input.getXAxis();
+        Debug.Log(xAxis);
         //left right movement both for ground and in air
         if (isGrounded)
         {
@@ -192,6 +200,15 @@ public class GunControl : NetworkBehaviour {
         transform.GetChild(0).rotation = Quaternion.Euler(input.getRotation());
     }
 
+
+    [Command]
+    void CmdJump()
+    {
+        isGrounded = false;
+        groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
+        rb.AddForce(jumpForce * Vector2.up, ForceMode2D.Impulse);
+
+    }
 
     [Command]
     void Cmdrocket_allactive()
