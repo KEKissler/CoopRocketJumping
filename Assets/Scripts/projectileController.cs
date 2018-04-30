@@ -113,10 +113,6 @@ public class projectileController : NetworkBehaviour
                     {
                     coll2d.gameObject.transform.parent.GetComponent<GunControl>().RpcApplyRocketForceToSelf(currentForce, centerPointOfCollision, centerPointOfCollision - (Vector2)coll2d.gameObject.transform.position);
                     }
-                    else if(coll2d.tag == "PhysObj")
-                    {
-                        coll2d.gameObject.GetComponent<Rigidbody2D>().AddForce(-currentForce * (centerPointOfCollision - (Vector2)coll2d.gameObject.transform.position).normalized + new Vector2(0,5f), ForceMode2D.Impulse);
-                    }
                     ++i;
                 }
                 //Debug.Log("Num gameObjects within " + currentExplosionSize + " units of centerPoint = " + (i - 1));//i-1 b/c the projectile counts itself
