@@ -46,6 +46,14 @@ public class GunControl : NetworkBehaviour {
         input = GetComponent<GunInput>();
 
         Physics2D.IgnoreLayerCollision(8, 8);//objects on layer of player cannot collide with one another, meaning players cannot bump into one another
+        Physics2D.IgnoreLayerCollision(8, 10);
+        Physics2D.IgnoreLayerCollision(10, 10);
+        Physics2D.IgnoreLayerCollision(8, 9);
+        Physics2D.IgnoreLayerCollision(9, 13);
+        Physics2D.IgnoreLayerCollision(8, 14);
+        Physics2D.IgnoreLayerCollision(10, 11);
+        Physics2D.IgnoreLayerCollision(11, 13);
+        Physics2D.IgnoreLayerCollision(10, 14);
     }
 
     // Update is called once per frame
@@ -55,6 +63,10 @@ public class GunControl : NetworkBehaviour {
         if (!isLocalPlayer)
         {
             return;
+        }
+        else
+        {
+            this.gameObject.layer = 8;
         }
 
         //rb.velocity = (1 - Mathf.Clamp(percentVelocityLossPerSecond, 0, 1)) * rb.velocity;
@@ -178,6 +190,7 @@ public class GunControl : NetworkBehaviour {
         GameObject rocket = Instantiate(projectile, firePos, Quaternion.identity);
         NetworkServer.Spawn(rocket);
         //make rocket ignore collision with the player who fired it
+        rocket.gameObject.layer = 9;
         Physics2D.IgnoreCollision(rocket.GetComponent<CircleCollider2D>(), transform.GetChild(0).GetComponent<CircleCollider2D>(), true);
    //     rocket.transform.position = firePos;
 //        rocket.transform.rotation = eulerAngles;
