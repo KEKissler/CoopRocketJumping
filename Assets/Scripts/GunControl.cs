@@ -55,6 +55,7 @@ public class GunControl : NetworkBehaviour {
         Physics2D.IgnoreLayerCollision(10, 11);
         Physics2D.IgnoreLayerCollision(11, 13);
         Physics2D.IgnoreLayerCollision(10, 14);
+        Physics2D.IgnoreLayerCollision(15, 14);
         //projectiles ignore tpboxes
         Physics2D.IgnoreLayerCollision(9, 12, true);
         Physics2D.IgnoreLayerCollision(11, 12, true);
