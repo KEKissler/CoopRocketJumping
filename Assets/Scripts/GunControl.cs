@@ -176,11 +176,12 @@ public class GunControl : NetworkBehaviour {
         
       //  Debug.Log("transform.gameObject.name = " + transform.gameObject.name + " netId = " + netId + "\n this is the server? " + isLocalPlayer);
         GameObject rocket = Instantiate(projectile, firePos, Quaternion.identity);
-        NetworkServer.Spawn(rocket);
+        
         //make rocket ignore collision with the player who fired it
         Physics2D.IgnoreCollision(rocket.GetComponent<CircleCollider2D>(), transform.GetChild(0).GetComponent<CircleCollider2D>(), true);
-   //     rocket.transform.position = firePos;
-//        rocket.transform.rotation = eulerAngles;
+        NetworkServer.Spawn(rocket);
+        //     rocket.transform.position = firePos;
+        //        rocket.transform.rotation = eulerAngles;
 
         projectileController pC = rocket.GetComponent<projectileController>();
         pC.velo = pC.speed * (new Vector2(Mathf.Cos(Mathf.Deg2Rad * (eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (eulerAngles.z - 90)))).normalized;
