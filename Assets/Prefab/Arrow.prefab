@@ -127,8 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ready_count: 0
-  player1: {fileID: 0}
-  player2: {fileID: 0}
+  nextRespawn: {x: 0, y: 0, z: 0}
 --- !u!114 &114270568364537504
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -160,7 +159,7 @@ MonoBehaviour:
     i14: 81
     i15: 113
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114296069555777060
 MonoBehaviour:
   m_ObjectHideFlags: 1
