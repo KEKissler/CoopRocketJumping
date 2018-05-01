@@ -183,12 +183,13 @@ public class GunControl : NetworkBehaviour {
 //        rocket.transform.rotation = eulerAngles;
 
         projectileController pC = rocket.GetComponent<projectileController>();
+        pC.velo = pC.speed * (new Vector2(Mathf.Cos(Mathf.Deg2Rad * (eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (eulerAngles.z - 90)))).normalized;
         pC.playerWhoFiredThis = transform;
         pC.netIdOfWhoFiredThis = netId;
         //Debug.Log(transform.gameObject.name + " netId = " + netId + " fired a rocket");
 
 
-         pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (eulerAngles.z - 90))));
+         pC.Fire();
 
      //below is the old formula
       //  pC.Fire(new Vector2(Mathf.Cos(Mathf.Deg2Rad * (transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (transform.GetChild(0).rotation.eulerAngles.z - 90))));
