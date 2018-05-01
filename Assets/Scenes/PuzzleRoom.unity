@@ -11819,7 +11819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ready_count: 0
-  nextRespawn: {x: 0, y: 0, z: 0}
+  nextRespawn: {x: 90, y: 0, z: 0}
 --- !u!70 &1487112822
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -13099,7 +13099,7 @@ MonoBehaviour:
     i14: 250
     i15: 42
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
+  m_LocalPlayerAuthority: 0
 --- !u!114 &1907820092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13125,7 +13125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ready_count: 0
-  nextRespawn: {x: 82, y: 0, z: 0}
+  nextRespawn: {x: 178, y: 0, z: 0}
 --- !u!70 &1907820094
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
