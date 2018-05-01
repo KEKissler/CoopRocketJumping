@@ -7,12 +7,20 @@ public class TeleporterBox : MonoBehaviour {
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.transform.parent != null)
+        if (other.tag == "PhysObj")
         {
-            other.transform.parent.position = ObjectLocationToTPTo.transform.position;
-        }else
+            other.GetComponent<boxTpController>().resetToSpawnPoint();
+        }
+        else
         {
-            other.transform.position = ObjectLocationToTPTo.transform.position;
+            if (other.transform.parent != null)
+            {
+                other.transform.parent.position = ObjectLocationToTPTo.transform.position;
+            }
+            else
+            {
+                other.transform.position = ObjectLocationToTPTo.transform.position;
+            }
         }
     }
 }

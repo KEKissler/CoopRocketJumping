@@ -54,6 +54,9 @@ public class GunControl : NetworkBehaviour {
         Physics2D.IgnoreLayerCollision(10, 11);
         Physics2D.IgnoreLayerCollision(11, 13);
         Physics2D.IgnoreLayerCollision(10, 14);
+        //projectiles ignore tpboxes
+        Physics2D.IgnoreLayerCollision(9, 12, true);
+        Physics2D.IgnoreLayerCollision(11, 12, true);
     }
 
     // Update is called once per frame
@@ -174,7 +177,6 @@ public class GunControl : NetworkBehaviour {
     [Command]
     void Cmdrocket_allactive()
     {
-       
         rocket1.color = active;
         rocket2.color = active;
         rocket3.color = active;

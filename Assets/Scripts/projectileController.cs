@@ -31,11 +31,13 @@ public class projectileController : NetworkBehaviour
     public Transform playerWhoFiredThis;
     [HideInInspector]
     public NetworkInstanceId netIdOfWhoFiredThis;
+    public float timeToLive;
+    private float timeAlive;
 
     // Use this for initialization
     void Start()
     {
-        //Physics2D.IgnoreLayerCollision(8, 9, true);
+        timeAlive = 0f;
     }
 
     private void OnSetColl(float newCollSize)
@@ -53,6 +55,15 @@ public class projectileController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        //managing timeToLive and self destruction, only on server since anything destroyed there is propgated to all clients
+        if (isServer)
+        {
+            if (timeAlive > timeToLive)
+            {
+                Destroy(this.gameObject);
+            }
+            timeAlive += Time.deltaTime;
+        }
 
         if (fired)
         {

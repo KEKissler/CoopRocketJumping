@@ -157,6 +157,7 @@ MonoBehaviour:
   velo: {x: 0, y: 0}
   explosion: {fileID: 1154285485190530, guid: 5ca8998c49ebe264a98f7fd4c2c3cf1f, type: 2}
   playerWhoFiredThis: {fileID: 0}
+  timeToLive: 10
 --- !u!212 &212808860883740104
 SpriteRenderer:
   m_ObjectHideFlags: 1
