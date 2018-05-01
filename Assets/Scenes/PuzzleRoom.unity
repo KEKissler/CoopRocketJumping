@@ -1048,7 +1048,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 823a1e7d28d3ff24d83311841850331a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectLocationToTPTo: {fileID: 0}
+  ObjectLocationToTPTo: {fileID: 1500502422}
 --- !u!61 &506950245
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12416,6 +12416,11 @@ Prefab:
       propertyPath: nextRespawn.x
       value: 82
       objectReference: {fileID: 0}
+    - target: {fileID: 114775670659763068, guid: 94941e19d9b3ea4498b5bd2daf9f5171,
+        type: 2}
+      propertyPath: ObjectLocationToTPTo
+      value: 
+      objectReference: {fileID: 1500502422}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 94941e19d9b3ea4498b5bd2daf9f5171, type: 2}
   m_IsPrefabParent: 0
@@ -13190,7 +13195,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1907820090}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 34.879997, y: 7.2, z: 0}
+  m_LocalPosition: {x: 35.29, y: 6.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 506950243}

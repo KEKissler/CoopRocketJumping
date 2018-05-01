@@ -135,7 +135,7 @@ public class projectileController : NetworkBehaviour
                 centerPointOfCollision /= totalNumPointsContacted;
             }
 
-            Debug.Log("Average Point of all contacts = " + centerPointOfCollision);
+           // Debug.Log("Average Point of all contacts = " + centerPointOfCollision);
             i = 0;
             Collider2D[] hitColliders = new Collider2D[16];
             Collider2D coll2d;
@@ -144,7 +144,7 @@ public class projectileController : NetworkBehaviour
             while (i < hitColliders.Length && hitColliders[i])
             {
                 coll2d = hitColliders[i];
-                Debug.Log(hitColliders[i].gameObject.name);
+                //Debug.Log(hitColliders[i].gameObject.name);
                 if (coll2d.tag == "Player")
                 {
                     coll2d.gameObject.transform.parent.GetComponent<GunControl>().RpcApplyRocketForceToSelf(currentForce, centerPointOfCollision, centerPointOfCollision - (Vector2)coll2d.gameObject.transform.position);
@@ -155,7 +155,7 @@ public class projectileController : NetworkBehaviour
                 }
                 ++i;
             }
-            Debug.Log("Num gameObjects within " + currentExplosionSize + " units of centerPoint = " + (i - 1));//i-1 b/c the projectile counts itself
+           // Debug.Log("Num gameObjects within " + currentExplosionSize + " units of centerPoint = " + (i - 1));//i-1 b/c the projectile counts itself
 
             if (totalNumPointsContacted > 0)
                 transform.position = new Vector3(centerPointOfCollision.x, centerPointOfCollision.y, transform.position.z);
