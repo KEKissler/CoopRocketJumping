@@ -55,7 +55,7 @@ public class projectileController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        //managing timeToLive and self destruction, only on server since anything destroyed there is propgated to all clients
+        //managing timeToLive and self destruction, only on server since anything destroyed there is propogated to all clients
         if (isServer)
         {
             if (timeAlive > timeToLive)

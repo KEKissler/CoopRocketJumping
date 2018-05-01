@@ -13,6 +13,7 @@ public class GunControl : NetworkBehaviour {
     private int groundedCheckReset;
     private Rigidbody2D rb;
     private bool isGrounded = false;
+    [SyncVar(hook = "OnRocketNumChange")]
     private int numRocketsLeft = 3;
     private bool hasFired = false;
     private GunInput input;
@@ -89,7 +90,8 @@ public class GunControl : NetworkBehaviour {
         if (groundedCheck.collider != null)
         {
             isGrounded = true;
-            Cmdrocket_allactive();
+            numRocketsLeft = 3;
+            OnRocketNumChange(numRocketsLeft);
         }
         else
         {
@@ -98,68 +100,76 @@ public class GunControl : NetworkBehaviour {
 
         //the jump itself
         if (isGrounded && input.getJump())
+        {
+            isGrounded = false;
+            groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
+            rb.AddForce(jumpForce * Vector2.up, ForceMode2D.Impulse);
+        }
+        float xAxis = input.getXAxis();
+        //left right movement both for ground and in air
+        if (isGrounded)
+        {
+            movement.x = xAxis;
+        }
+        else
+        //player is not grounded
+        {
+            //determine if input at all
+            if (xAxis != 0)
             {
-                isGrounded = false;
-                groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
-                rb.AddForce(jumpForce * Vector2.up, ForceMode2D.Impulse);
-
-
-            }
-
-            float xAxis = input.getXAxis();
-
-            //left right movement both for ground and in air
-            if (isGrounded)
-            {
-
-                movement.x = xAxis;
-            }
-            else
-            //player is not grounded
-            {
-                //determine if input at all
-                if (xAxis != 0)
+                //determine if input is trying to add to velocity rn or not
+                //if not in same direction or velocity is below threshold
+                if (rb.velocity.x * xAxis <= 0 || Mathf.Abs(rb.velocity.x) < airWalkSpeedThreshold)
                 {
-                    //determine if input is trying to add to velocity rn or not
-                    //if not in same direction or velocity is below threshold
-                    if (rb.velocity.x * xAxis <= 0 || Mathf.Abs(rb.velocity.x) < airWalkSpeedThreshold)
+                    //right
+                    if (xAxis > 0)
                     {
-                        //right
-                        if (xAxis > 0)
-                        {
-                            rb.AddForce(airWalkSpeed * Vector2.right, ForceMode2D.Force);
-                        }
-                        //left
-                        else
-                        {
-                            rb.AddForce(airWalkSpeed * Vector2.left, ForceMode2D.Force);
-                        }
+                        rb.AddForce(airWalkSpeed * Vector2.right, ForceMode2D.Force);
                     }
-
+                    //left
+                    else
+                    {
+                        rb.AddForce(airWalkSpeed * Vector2.left, ForceMode2D.Force);
+                    }
                 }
-            }
-            //managing fireRate stuff
-            if (timeSinceLastProjectile < fireRate)
-            {
-                timeSinceLastProjectile += Time.deltaTime;
-            }
-            //shooting projectiles
-            if (input.getFire() && numRocketsLeft > 0)
-            {
-                if (timeSinceLastProjectile >= fireRate && !hasFired)
-                {
-                    timeSinceLastProjectile = 0;
-                    CmdFire(this.transform.position, transform.GetChild(0).rotation.eulerAngles);
 
-
-
-                }
-            }
-            else
-            {
-                hasFired = false;
             }
         }
+        //managing fireRate stuff
+        if (timeSinceLastProjectile < fireRate)
+        {
+            timeSinceLastProjectile += Time.deltaTime;
+        }
+        //shooting projectiles
+        if (input.getFire() && numRocketsLeft > 0)
+        {
+            if (timeSinceLastProjectile >= fireRate && !hasFired)
+            {
+                timeSinceLastProjectile = 0;
+                if (!isGrounded)
+                {
+                    if (numRocketsLeft == 1)
+                        rocket1.color = inactive;
+                    if (numRocketsLeft == 2)
+                        rocket2.color = inactive;
+                    if (numRocketsLeft == 3)
+                        rocket3.color = inactive;
+                    if (numRocketsLeft > 0)
+                        CmdFire(this.transform.position, transform.GetChild(0).rotation.eulerAngles);
+                    numRocketsLeft--;
+                }
+                else
+                {
+                    CmdFire(this.transform.position, transform.GetChild(0).rotation.eulerAngles);
+                }
+
+            }
+        }
+        else
+        {
+            hasFired = false;
+        }
+    }
     
 
     private void FixedUpdate()
@@ -171,24 +181,27 @@ public class GunControl : NetworkBehaviour {
     {
         transform.GetChild(0).rotation = Quaternion.Euler(input.getRotation());
     }
-
-
-
-    [Command]
-    void Cmdrocket_allactive()
-    {
-        rocket1.color = active;
-        rocket2.color = active;
-        rocket3.color = active;
-        numRocketsLeft = 3;
-    }
     
+    private void OnRocketNumChange(int newRocketNum)
+    {
+        if (newRocketNum == 0)
+            rocket1.color = inactive;
+        if (newRocketNum == 1)
+            rocket2.color = inactive;
+        if (newRocketNum == 2)
+            rocket3.color = inactive;
+        if (newRocketNum == 3)
+        {
+            rocket1.color = active;
+            rocket2.color = active;
+            rocket3.color = active;
+        }
+    }
 
     [Command]
     void CmdFire(Vector3 firePos, Vector3 eulerAngles)
     {
         
-      //  Debug.Log("transform.gameObject.name = " + transform.gameObject.name + " netId = " + netId + "\n this is the server? " + isLocalPlayer);
         GameObject rocket = Instantiate(projectile, firePos, Quaternion.identity);
         
         //make rocket ignore collision with the player who fired it
@@ -212,17 +225,7 @@ public class GunControl : NetworkBehaviour {
         hasFired = true;
 
 
-        if (!isGrounded)
-        {
-
-            if (numRocketsLeft == 1)
-                rocket1.color = inactive;
-            if (numRocketsLeft == 2)
-                rocket2.color = inactive;
-            if (numRocketsLeft == 3)
-                rocket3.color = inactive;
-            numRocketsLeft -= 1;
-        }
+        
         //Debug.Log("angle: " + (this.transform.rotation.eulerAngles.z - 90) + "\nexpanded vector:" + new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.rotation.eulerAngles.z - 90))));
         //RaycastHit2D test = Physics2D.Raycast((Vector2)(transform.position), new Vector2(Mathf.Cos(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90)), Mathf.Sin(Mathf.Deg2Rad * (this.transform.GetChild(0).rotation.eulerAngles.z - 90))), distance: Mathf.Infinity, layerMask: 13);
 
