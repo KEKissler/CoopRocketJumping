@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4415326646770676}
   - component: {fileID: 212194090734522116}
   - component: {fileID: 58819846700100486}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -37,7 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4843125175422202}
   - component: {fileID: 212635224189743826}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rocket3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,7 +53,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4474944410760008}
   - component: {fileID: 212238371312358326}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rocket2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4859343232853130}
   - component: {fileID: 212239693007936022}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Gun
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 50039993408761660}
   - component: {fileID: 114224553699206388}
   - component: {fileID: 114823101276336016}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PlayerWrapper
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4654683763616374}
   - component: {fileID: 212392951630071080}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rocket1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8100c01a0b8490c478357602ee73cc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: 1
+  controller: 0
 --- !u!114 &114117668874956794
 MonoBehaviour:
   m_ObjectHideFlags: 1
