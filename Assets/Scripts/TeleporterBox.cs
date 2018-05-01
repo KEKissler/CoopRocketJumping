@@ -15,7 +15,7 @@ public class TeleporterBox : MonoBehaviour {
         {
             if (other.transform.parent != null)
             {
-                other.GetComponent<Rigidbody2D>().velocity = new Vector2();
+                other.transform.parent.GetComponent<Rigidbody2D>().velocity = new Vector2();
                 other.transform.parent.position = ObjectLocationToTPTo.transform.position;
             }
             else
