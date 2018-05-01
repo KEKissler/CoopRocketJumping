@@ -3779,7 +3779,7 @@ MonoBehaviour:
   m_LobbyScene: Lobby
   m_PlayScene: PuzzleRoom
   lobbySlots: []
-  prematchCountdown: 3
+  prematchCountdown: 0
   topPanel: {fileID: 1016527084}
   mainMenuPanel: {fileID: 995252733}
   lobbyPanel: {fileID: 292273166}
@@ -4312,7 +4312,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 0
-  m_Text: NETWORK LOBBY EXAMPLE
+  m_Text: NETWORK LOBBY
 --- !u!222 &1483513487
 CanvasRenderer:
   m_ObjectHideFlags: 0

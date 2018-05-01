@@ -99,7 +99,7 @@ public class GunControl : NetworkBehaviour {
         }
 
         //the jump itself
-        if (isGrounded && input.getJump())
+        if (false == true)//isGrounded && input.getJump())
         {
             isGrounded = false;
             groundedCheckReset = numUpdatesToIgnoreGroundedCheck;
