@@ -22,10 +22,11 @@ public class Scene_Loader : NetworkBehaviour  {
     
        if (ready_count ==2)
         {
+            GetComponent<Exit_Door>().did_tp = true;
             rp.transform.position = nextRespawn;
             tp.gameObject.SetActive(true);
             ready_count ++ ;
-            GetComponent<Exit_Door>().did_tp = true;
+   
         }
 
     }
