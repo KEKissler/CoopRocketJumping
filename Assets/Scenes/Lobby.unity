@@ -3777,7 +3777,7 @@ MonoBehaviour:
   m_GamePlayerPrefab: {fileID: 1589402915363746, guid: 037d8582862e81241aca315f771f5147,
     type: 2}
   m_LobbyScene: Lobby
-  m_PlayScene: Really Tina's Scene
+  m_PlayScene: PuzzleRoom
   lobbySlots: []
   prematchCountdown: 3
   topPanel: {fileID: 1016527084}
