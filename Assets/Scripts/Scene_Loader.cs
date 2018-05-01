@@ -6,12 +6,14 @@ using UnityEngine.Networking;
 public class Scene_Loader : NetworkBehaviour  {
 
     public int ready_count = 0;
-
-    public GameObject player1;
-    public GameObject player2;
-	// Use this for initialization
+    //public List<Vector2> futureExits;
+    public Vector3 nextRespawn;
+    private Transform tp;
+    private GameObject rp;
+    //public int currentLevel;
 	void Start () {
-		
+        tp = this.transform.GetChild(0);
+		rp =  tp.GetComponent<TeleporterBox>().ObjectLocationToTPTo;
 	}
 
 
@@ -20,7 +22,9 @@ public class Scene_Loader : NetworkBehaviour  {
     
        if (ready_count ==2)
         {
-            LoadOnline("NetworkTest_Tina");
+            rp.transform.position = nextRespawn;
+            tp.gameObject.SetActive(true);
+            ready_count ++ ;
         }
 
     }
