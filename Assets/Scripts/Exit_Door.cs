@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Exit_Door : MonoBehaviour {
 
-
+    public bool did_tp = false;
 	// Use this for initialization
 	void Start () {
 
@@ -22,7 +22,7 @@ public class Exit_Door : MonoBehaviour {
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Player")
+        if (collision.tag == "Player" && !did_tp)
            GetComponent<Scene_Loader>().ready_count--;
     }
     // Update is called once per frame
