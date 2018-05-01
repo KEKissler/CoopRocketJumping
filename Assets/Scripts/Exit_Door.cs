@@ -14,10 +14,10 @@ public class Exit_Door : MonoBehaviour {
     {
         if (collision.tag == "Player")
                 GetComponent<Scene_Loader>().ready_count++;
-        if (GetComponent<Scene_Loader>().ready_count == 1)
-         GetComponent<Scene_Loader>().player1 = collision.gameObject;
-        else if (GetComponent<Scene_Loader>().ready_count == 2)
-            GetComponent<Scene_Loader>().player2 = collision.gameObject;
+        // if (GetComponent<Scene_Loader>().ready_count == 1)
+        //  GetComponent<Scene_Loader>().player1 = collision.gameObject;
+        // else if (GetComponent<Scene_Loader>().ready_count == 2)
+        //     GetComponent<Scene_Loader>().player2 = collision.gameObject;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
