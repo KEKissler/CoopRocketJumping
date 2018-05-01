@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114073535279275746}
   - component: {fileID: 114296069555777060}
   - component: {fileID: 114270568364537504}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 4141123682441872}
   - component: {fileID: 61679237878069790}
   - component: {fileID: 114775670659763068}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Teleporter
   m_TagString: Untagged
   m_Icon: {fileID: 0}

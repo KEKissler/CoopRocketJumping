@@ -17,6 +17,7 @@ public class GunControl : NetworkBehaviour {
     private int numRocketsLeft = 3;
     private bool hasFired = false;
     private GunInput input;
+    public LayerMask mask;
     // Use this for initialization
 
     private Vector2 movement;
@@ -85,8 +86,8 @@ public class GunControl : NetworkBehaviour {
         }
         //manage grounded state via raycast down. Also a timer in terms of calls to this function that is the cooldown for doing that raycast check
         //prevents player being allowed to double jump due to being deemed grounded the frame after jumping and still being close to the ground
-        groundedCheck = Physics2D.Raycast((Vector2)(transform.position), Vector2.down, groundedCheckDist, layerMask: 13);
-
+      //  LayerMask mask = LayerMask.NameToLayer("PlayerSelf");
+        groundedCheck = Physics2D.Raycast((Vector2)(transform.position), Vector2.down, groundedCheckDist, layerMask: mask.value);
 
         if (groundedCheck.collider != null)
         {
@@ -100,7 +101,7 @@ public class GunControl : NetworkBehaviour {
         }
 
         //the jump itself
-        if (false == true)//isGrounded && input.getJump())
+        if (isGrounded && input.getJump())
         {
             isGrounded = false;
             groundedCheckReset = numUpdatesToIgnoreGroundedCheck;

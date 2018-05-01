@@ -271,6 +271,9 @@ MonoBehaviour:
   rocket3: {fileID: 212635224189743826}
   active: {r: 1, g: 0, b: 0, a: 1}
   inactive: {r: 0, g: 0, b: 0, a: 1}
+  mask:
+    serializedVersion: 2
+    m_Bits: 4294942921
 --- !u!114 &114224553699206388
 MonoBehaviour:
   m_ObjectHideFlags: 1
