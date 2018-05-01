@@ -11,11 +11,8 @@ public class switchController : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D Coll2D)
     {
-        if (Coll2D.tag == "Player" || Coll2D.tag == "PhysObj")
-        {
-            isActivated = true;
-            timeLeftActive = remainActiveTime;
-        }
+        isActivated = true;
+        timeLeftActive = remainActiveTime;
     }
 
     void Update()
