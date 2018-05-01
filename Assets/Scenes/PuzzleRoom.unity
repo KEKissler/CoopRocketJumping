@@ -6775,11 +6775,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4653904721956762, guid: aef347833c8404d4bb20a45879acfa2a, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 6.67
+      value: 13.5
       objectReference: {fileID: 0}
     - target: {fileID: 4653904721956762, guid: aef347833c8404d4bb20a45879acfa2a, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -1.43
+      value: 13.32
       objectReference: {fileID: 0}
     - target: {fileID: 114099721885591992, guid: aef347833c8404d4bb20a45879acfa2a,
         type: 2}
