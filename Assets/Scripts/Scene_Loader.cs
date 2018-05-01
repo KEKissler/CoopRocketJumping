@@ -25,6 +25,7 @@ public class Scene_Loader : NetworkBehaviour  {
             rp.transform.position = nextRespawn;
             tp.gameObject.SetActive(true);
             ready_count ++ ;
+            GetComponent<Exit_Door>().did_tp = true;
         }
 
     }
