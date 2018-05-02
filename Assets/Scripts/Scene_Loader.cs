@@ -20,12 +20,17 @@ public class Scene_Loader : NetworkBehaviour  {
     // Update is called once per frame
     void Update () {
     
-       if (ready_count ==2)
+       if (ready_count >=2)
         {
-            GetComponent<Exit_Door>().did_tp = true;
+
             rp.transform.position = nextRespawn;
+            GetComponent<Exit_Door>().tp_count ++;
             tp.gameObject.SetActive(true);
-            ready_count ++ ;
+            
+            if (GetComponent<Exit_Door>().tp_count >=2)
+            {
+                this.enabled = false;
+            }
    
         }
 
