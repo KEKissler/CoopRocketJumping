@@ -5,6 +5,10 @@ using UnityEngine;
 public class TeleporterBox : MonoBehaviour {
     public GameObject ObjectLocationToTPTo;
 
+    void Start()
+    {
+        ObjectLocationToTPTo = GameObject.Find("RespawnPoint");
+    }
     public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "PhysObj")
