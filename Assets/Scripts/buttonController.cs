@@ -39,12 +39,42 @@ public class buttonController : NetworkBehaviour {
 
 	void OnTriggerStay2D(Collider2D Coll2D)
 	{
-        if (Coll2D.tag == "Player" || Coll2D.tag == "PhysObj")
+        if (!stay && Coll2D.tag == "Player" || Coll2D.tag == "PhysObj")
             CmdSetStay(true);
 	}
 	void OnTriggerExit2D(Collider2D Coll2D)
 	{
-        CmdSetStay(false);
+        /*
+        bool shouldNotTouch = false;
+        BoxCollider2D colliderInQuestion = GetComponent<BoxCollider2D>();
+
+        BoxCollider2D[] bc = new BoxCollider2D[256];
+        bc = FindObjectsOfType<BoxCollider2D>();
+        CircleCollider2D[] cc = new CircleCollider2D[256];
+        cc = FindObjectsOfType<CircleCollider2D>();
+
+        foreach (CircleCollider2D c in cc)
+        {
+            if (c.tag == "Player" && colliderInQuestion.bounds.Intersects(c.bounds))
+            {
+                shouldNotTouch = true;
+            }
+        }
+
+        foreach (BoxCollider2D b in bc)
+        {
+            
+            if (b.tag == "PhysObj" && colliderInQuestion.bounds.Intersects(b.bounds))
+            {
+                Debug.Log("hi" + b.name);
+                shouldNotTouch = true;
+            }
+        }
+        */
+        //if (!shouldNotTouch)
+        //{
+            CmdSetStay(false);
+        //}        
 	}
 
     [Command]
