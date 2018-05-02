@@ -7,7 +7,8 @@ public class TeleporterBox : MonoBehaviour {
 
     void Start()
     {
-        ObjectLocationToTPTo = GameObject.Find("RespawnPoint");
+        if (ObjectLocationToTPTo == null)
+            ObjectLocationToTPTo = GameObject.Find("RespawnPoint");
     }
     public void OnTriggerEnter2D(Collider2D other)
     {
@@ -15,7 +16,7 @@ public class TeleporterBox : MonoBehaviour {
         {
             other.GetComponent<boxTpController>().resetToSpawnPoint();
         }
-        else
+        else if (other.tag == "Player")
         {
             if (other.transform.parent != null)
             {
