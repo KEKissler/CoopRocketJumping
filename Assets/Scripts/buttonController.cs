@@ -10,6 +10,7 @@ public class buttonController : NetworkBehaviour {
     [SyncVar]
 	private bool stay = false;
 	private SpriteRenderer sr;
+    private int numCollidersInRangeOfButton = 0;
 	// Use this for initialization
 	void Start () {
 		sr = GetComponent<SpriteRenderer>();
@@ -37,44 +38,26 @@ public class buttonController : NetworkBehaviour {
 		}
 	}
 
-	void OnTriggerStay2D(Collider2D Coll2D)
+	void OnTriggerEnter2D(Collider2D Coll2D)
 	{
-        if (!stay && Coll2D.tag == "Player" || Coll2D.tag == "PhysObj")
+        if (Coll2D.tag == "Player" || Coll2D.tag == "PhysObj")
+        {
+            numCollidersInRangeOfButton++;
             CmdSetStay(true);
-	}
+        }
+}
+
 	void OnTriggerExit2D(Collider2D Coll2D)
 	{
-        /*
-        bool shouldNotTouch = false;
-        BoxCollider2D colliderInQuestion = GetComponent<BoxCollider2D>();
-
-        BoxCollider2D[] bc = new BoxCollider2D[256];
-        bc = FindObjectsOfType<BoxCollider2D>();
-        CircleCollider2D[] cc = new CircleCollider2D[256];
-        cc = FindObjectsOfType<CircleCollider2D>();
-
-        foreach (CircleCollider2D c in cc)
-        {
-            if (c.tag == "Player" && colliderInQuestion.bounds.Intersects(c.bounds))
-            {
-                shouldNotTouch = true;
-            }
-        }
-
-        foreach (BoxCollider2D b in bc)
+        if (Coll2D.tag == "Player" || Coll2D.tag == "PhysObj")
         {
             
-            if (b.tag == "PhysObj" && colliderInQuestion.bounds.Intersects(b.bounds))
+            if (--numCollidersInRangeOfButton <= 0)
             {
-                Debug.Log("hi" + b.name);
-                shouldNotTouch = true;
+                numCollidersInRangeOfButton = 0;
+                CmdSetStay(false);
             }
         }
-        */
-        //if (!shouldNotTouch)
-        //{
-            CmdSetStay(false);
-        //}        
 	}
 
     [Command]
