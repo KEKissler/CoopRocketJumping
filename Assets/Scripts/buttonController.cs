@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class buttonController : MonoBehaviour {
+public class buttonController : NetworkBehaviour {
 
 	public bool active = false;
 	//public GameObject toToggle;
+    [SyncVar]
 	private bool stay = false;
 	private SpriteRenderer sr;
 	// Use this for initialization
@@ -37,11 +39,17 @@ public class buttonController : MonoBehaviour {
 
 	void OnTriggerStay2D(Collider2D Coll2D)
 	{
-		if (Coll2D.tag == "Player" || Coll2D.tag == "PhysObj")
-			stay = true;
+        if (Coll2D.tag == "Player" || Coll2D.tag == "PhysObj")
+            CmdSetStay(true);
 	}
 	void OnTriggerExit2D(Collider2D Coll2D)
 	{
-		stay = false;
+        CmdSetStay(false);
 	}
+
+    [Command]
+    public void CmdSetStay(bool newVal)
+    {
+        stay = newVal;
+    }
 }
