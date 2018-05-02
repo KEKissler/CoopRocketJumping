@@ -20,15 +20,17 @@ public class buttonController : MonoBehaviour {
 			if (stay)
 			{
 				active = true;
-				sr.color = Color.blue;
-			}
+                sr.sprite = Resources.Load<Sprite>("Button_On");
+                //sr.color = Color.blue;
+            }
 		}
 		else
 		{
 			if (!stay)
 			{
 				active = false;
-				sr.color = Color.red;
+                sr.sprite = Resources.Load<Sprite>("Button_Off" );
+				//sr.color = Color.red;
 			}
 		}
 	}
