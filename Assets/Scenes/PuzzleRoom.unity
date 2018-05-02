@@ -1059,7 +1059,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -11806,6 +11806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a63588547329124b8554ecc1bebbf32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  did_tp: 0
 --- !u!114 &1487112821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12421,6 +12422,11 @@ Prefab:
       propertyPath: ObjectLocationToTPTo
       value: 
       objectReference: {fileID: 1500502422}
+    - target: {fileID: 61679237878069790, guid: 94941e19d9b3ea4498b5bd2daf9f5171,
+        type: 2}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 94941e19d9b3ea4498b5bd2daf9f5171, type: 2}
   m_IsPrefabParent: 0
@@ -13112,6 +13118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a63588547329124b8554ecc1bebbf32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  did_tp: 0
 --- !u!114 &1907820093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13257,7 +13264,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
