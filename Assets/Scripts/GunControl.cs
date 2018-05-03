@@ -247,6 +247,7 @@ public class GunControl : NetworkBehaviour {
 
 
     }
+
     [ClientRpc]
     public void RpcApplyRocketForceToSelf(float explForce, Vector2 explosionCenter, Vector2 direction)
     {
